@@ -4,7 +4,6 @@ import authV1LoginMaskDark from '@images/pages/auth-v1-login-mask-dark.png'
 import authV1LoginMaskLight from '@images/pages/auth-v1-login-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-
 definePage({ meta: { layout: 'blank' } })
 
 const form = ref({
@@ -14,8 +13,9 @@ const form = ref({
 })
 
 const login =  () => {
-  const res =  useApi('/login')
-  console.log(res)
+  useApi.post("/api/login").then(res =>{
+    console.log(res)
+  })
 }
 
 const authV1ThemeLoginMask = useGenerateImageVariant(authV1LoginMaskLight, authV1LoginMaskDark)

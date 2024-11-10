@@ -4,17 +4,25 @@ import authV1LoginMaskDark from '@images/pages/auth-v1-login-mask-dark.png'
 import authV1LoginMaskLight from '@images/pages/auth-v1-login-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { useRouter } from 'vue-router'
 definePage({ meta: { layout: 'blank' } })
-
-const form = ref({
+const router = useRouter();
+const loginForm = ref({
   email: '',
   password: '',
   remember: false,
 })
 
 const login =  () => {
-  useApi.post("/api/login").then(res =>{
-    console.log(res)
+  useApi.post("/api/login",loginForm).then(res =>{
+    if (res.data.code === 1){
+      alert("登录成功")
+      router.push("/")
+    }else {
+      alert(res.data.message)
+      loginForm.value.email = ''
+      loginForm.value.password = ''
+    }
   })
 }
 
@@ -44,7 +52,7 @@ const isPasswordVisible = ref(false)
             <!-- email -->
             <VCol cols="12">
               <VTextField
-                v-model="form.email"
+                v-model="loginForm.email"
                 autofocus
                 label="Email"
                 type="email"
@@ -55,7 +63,7 @@ const isPasswordVisible = ref(false)
             <!-- password -->
             <VCol cols="12">
               <VTextField
-                v-model="form.password"
+                v-model="loginForm.password"
                 label="Password"
                 placeholder="············"
                 :type="isPasswordVisible ? 'text' : 'password'"
@@ -66,7 +74,7 @@ const isPasswordVisible = ref(false)
               <!-- remember me checkbox -->
               <div class="d-flex align-center justify-space-between flex-wrap my-6">
                 <VCheckbox
-                  v-model="form.remember"
+                  v-model="loginForm.remember"
                   label="Remember me"
                 />
               </div>

@@ -1,6 +1,6 @@
 export default [
   {
-    title: 'Home',
+    title: '班级信息',
     to: { name: 'root' },
     icon: { icon: 'ri-home-smile-2-line' },
   },

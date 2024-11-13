@@ -5,8 +5,8 @@ export default [
     icon: { icon: 'ri-home-smile-2-line' },
   },
   {
-    title: 'Second page',
-    to: { name: 'second-page' },
+    title: '请假审批',
+    to: { name: 'leave' },
     icon: { icon: 'ri-file-text-line' },
   },
 ]

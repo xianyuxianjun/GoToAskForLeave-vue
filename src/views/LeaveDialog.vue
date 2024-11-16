@@ -1,11 +1,53 @@
 <script lang="ts" setup>
-import {ref} from "vue";
-
+import { useApi } from "@/utils/api";
+import {ref, toRefs} from "vue";
 const isDialogVisible = ref(false)
-const firstName = ref('')
-const middleName = ref('')
-const lastName = ref('')
-const email = ref('')
+const {leave} = defineProps(['leave'])
+console.log(leave)
+const data = ref({
+  leaveId:leave.leaveId,
+  courseName:leave.courseName,
+  className:leave.className,
+  stuId:leave.stuId,
+  stuName:leave.stuName,
+  reason:leave.reason,
+  daynum:leave.daynum,
+  status:leave.status,
+  audittime:leave.audittime,
+  opinion:leave.opinion
+})
+console.log(data.value)
+//拒绝
+const jujue = ()=>{
+  data.value.status = '未通过'
+  useApi.post("leave/updateLeave",data.value)
+    .then(res =>{
+      isDialogVisible.value = false
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+}
+//同意
+const tongyi = ()=>{
+  alert("同i")
+  data.value.status = '已通过'
+  useApi.post("leave/updateLeave",data.value)
+    .then(res =>{
+      isDialogVisible.value = false
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+}
+const isTure = ()=>{
+  if(data.value.status == '未审批'){
+    return true
+  }
+  else {
+    return false
+  }
+}
 </script>
 
 <template>
@@ -15,7 +57,7 @@ const email = ref('')
   >
     <!-- Dialog Activator -->
     <template #activator="{ props }">
-      <VBtn v-bind="props">
+      <VBtn v-bind="props" :disabled="isTure">
         批复
       </VBtn>
     </template>
@@ -35,9 +77,10 @@ const email = ref('')
             md="4"
           >
             <VTextField
-              v-model="firstName"
+              v-model="data.stuName"
               label="请假人"
               placeholder="请假人"
+              readonly
             />
           </VCol>
           <VCol
@@ -46,9 +89,10 @@ const email = ref('')
             md="4"
           >
             <VTextField
-              v-model="middleName"
+              v-model="data.daynum"
               label="请假天数"
               placeholder="请假天数"
+              readonly
             />
           </VCol>
           <VCol
@@ -57,17 +101,19 @@ const email = ref('')
             md="4"
           >
             <VTextField
-              v-model="lastName"
+              v-model="data.courseName"
               label="请假课程"
               persistent-hint
               placeholder="Doe"
+              readonly
             />
           </VCol>
           <VCol cols="12">
             <VTextField
-              v-model="email"
-              label="起止时间"
-              placeholder="起止时间"
+              v-model="data.audittime"
+              label="请假时间"
+              placeholder="请假时间"
+              readonly
             />
           </VCol>
           <VCol cols="12">
@@ -78,8 +124,10 @@ const email = ref('')
             sm="12"
           >
             <VTextarea
+              v-model="data.reason"
               label="请假事由"
               placeholder="请假事由"
+              readonly
             />
           </VCol>
           <VCol
@@ -89,6 +137,7 @@ const email = ref('')
             <VTextarea
               label="批复"
               placeholder="批复"
+              v-model="data.opinion"
             />
           </VCol>
         </VRow>
@@ -97,13 +146,13 @@ const email = ref('')
       <VCardText class="d-flex justify-end flex-wrap gap-4">
         <VBtn
           color="error"
-          @click="isDialogVisible = false"
+          @click="jujue"
         >
           拒绝
         </VBtn>
         <VBtn
           color="success"
-          @click="isDialogVisible = false"
+          @click="tongyi"
         >
           同意
         </VBtn>

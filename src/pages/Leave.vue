@@ -1,38 +1,33 @@
 <script setup lang="ts">
+import { useApi } from "@/utils/api";
 import LeaveDialog from "@/views/LeaveDialog.vue";
-
-const desserts = [
+import {onMounted, ref} from "vue";
+const leaveList = ref([
   {
-    stuId: '202209512245',
-    stuName: '陈咸鱼',
-    classId: '22软件工程2班',
-    courseId: 'Vue',
-    daynum: '1',
-    applytime: '2022-11-12',
-    audittime:'',
-    status:'未通过'
-  },
-  {
-    stuId: '202209512246',
-    stuName: '陈咸鱼',
-    classId: '22软件工程2班',
-    courseId: 'Vue',
-    daynum: '1',
-    applytime: '2022-11-12',
-    audittime:'',
-    status:'已通过'
-  },
-  {
-    stuId: '202209512246',
-    stuName: '陈咸鱼',
-    classId: '22软件工程2班',
-    courseId: 'Vue',
-    daynum: '1',
-    applytime: '2022-11-12',
-    audittime:'',
-    status:'未审批'
-  },
-]
+    leaveId:'1',
+    courseName:'操作系统',
+    className:'22软件2班',
+    stuId:'202209512245',
+    stuName:'陈咸鱼',
+    reason:'参加校运会',
+    daynum:'1',
+    status:'未审批',
+    audittime:'2024-11-14',
+    opinion:''
+  }
+])
+const getLeaveList = ()=>{
+  useApi.post('/inst/getLeaveList',{instId:'2022001'})
+    .then(res =>{
+      leaveList.value = res.data.data
+    })
+    .catch(error =>{
+      console.log(error)
+    })
+}
+onMounted(() => {
+  getLeaveList()
+});
 </script>
 
 <template>
@@ -71,8 +66,8 @@ const desserts = [
 
     <tbody>
     <tr
-      v-for="item in desserts"
-      :key="item.stuId"
+      v-for="item in leaveList"
+      :key="item.leaveId"
     >
       <td>
         {{ item.stuId }}
@@ -81,16 +76,16 @@ const desserts = [
         {{ item.stuName }}
       </td>
       <td>
-        {{ item.classId }}
+        {{ item.className }}
       </td>
       <td>
-        {{ item.courseId }}
+        {{ item.courseName }}
       </td>
       <td>
         {{ item.daynum }}
       </td>
       <td>
-        {{ item.applytime }}
+        {{ item.audittime }}
       </td>
       <td>
         <VChip v-if="item.status === '未通过'" color="error">
@@ -104,7 +99,7 @@ const desserts = [
         </VChip>
       </td>
       <td>
-        <LeaveDialog></LeaveDialog>
+        <LeaveDialog :leave="item"></LeaveDialog>
       </td>
     </tr>
     </tbody>

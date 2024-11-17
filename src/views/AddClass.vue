@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import  {useApi}  from "../utils/api.js";
 import {onMounted, ref, toRefs} from "vue";
+import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 const isDialogVisible = ref(false)
 const newClass =ref({
   classId:'',
@@ -8,7 +9,7 @@ const newClass =ref({
   depId:'',
   major:'',
   grade:'',
-  instId:'                                 '
+  instId:''
 })
 const depList = ref([])
 const gradel = ref([
@@ -22,13 +23,17 @@ const depId = ref('')
 const tianjia = ()=>{
   newClass.value.depId=depId.value
   newClass.value.instId='2022001'
-  useApi.post("/classes/addClasses",newClass.value)
-    .then(res=>{
-      if (res.data.code === 1){
-        alert("添加成功")
-        isDialogVisible.value=false
-      }
-    })
+  if (newClass.value.className == '' && newClass.value.major == '' && newClass.value.grade == ''){
+    alert('请输入完整信息')
+  }else {
+    useApi.post("/classes/addClasses",newClass.value)
+      .then(res=>{
+        if (res.data.code === 1){
+          alert("添加成功")
+          isDialogVisible.value=false
+        }
+      })
+  }
 }
 const getDep = ()=>{
   useApi.get("/dep/getDep").then(res=>{
@@ -104,7 +109,7 @@ onMounted(()=>{
       <VCardText class="d-flex justify-end flex-wrap gap-4">
         <VBtn
           color="error"
-          @click="isDialogVisible=true"
+          @click="isDialogVisible=false"
         >
           取消
         </VBtn>

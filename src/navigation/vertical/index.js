@@ -9,4 +9,9 @@ export default [
     to: { name: 'leave' },
     icon: { icon: 'ri-file-text-line' },
   },
+    {
+        title: '课程信息',
+        to: { name: 'class-info' },
+        icon: { icon: 'ri-file-text-line' },
+    },
 ]

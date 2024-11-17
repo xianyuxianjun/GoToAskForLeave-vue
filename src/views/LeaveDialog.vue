@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useApi } from "@/utils/api";
 import {ref, toRefs} from "vue";
+import { updateLeave } from '../Api/instApi'
 const isDialogVisible = ref(false)
 const {leave} = defineProps(['leave'])
 console.log(leave)
@@ -18,27 +19,17 @@ const data = ref({
 })
 console.log(data.value)
 //拒绝
-const jujue = ()=>{
+const jujue = async ()=>{
   data.value.status = '未通过'
-  useApi.post("leave/updateLeave",data.value)
-    .then(res =>{
-      isDialogVisible.value = false
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+  const res = await updateLeave(data.value)
+  isDialogVisible.value=false
 }
 //同意
-const tongyi = ()=>{
+const tongyi =async ()=>{
   alert("同i")
   data.value.status = '已通过'
-  useApi.post("leave/updateLeave",data.value)
-    .then(res =>{
-      isDialogVisible.value = false
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+  const res = await updateLeave(data.value)
+  isDialogVisible.value = false
 }
 const isTure = ()=>{
   if(data.value.status == '未审批'){

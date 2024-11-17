@@ -2,6 +2,7 @@
 import { useApi } from "@/utils/api";
 import LeaveDialog from "@/views/LeaveDialog.vue";
 import {onMounted, ref} from "vue";
+import { getLeaveList } from '../Api/instApi'
 const leaveList = ref([
   {
     leaveId:'1',
@@ -16,17 +17,12 @@ const leaveList = ref([
     opinion:''
   }
 ])
-const getLeaveList = ()=>{
-  useApi.post('/inst/getLeaveList',{instId:'2022001'})
-    .then(res =>{
-      leaveList.value = res.data.data
-    })
-    .catch(error =>{
-      console.log(error)
-    })
+const getData = async ()=>{
+  const res = await getLeaveList({instId:'2022001'})
+  leaveList.value =res.data
 }
 onMounted(() => {
-  getLeaveList()
+  getData()
 });
 </script>
 

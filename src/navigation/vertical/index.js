@@ -11,7 +11,7 @@ export default [
   },
     {
         title: '课程信息',
-        to: { name: 'class-info' },
+        to: { name: 'course-info' },
         icon: { icon: 'ri-file-text-line' },
     },
 ]

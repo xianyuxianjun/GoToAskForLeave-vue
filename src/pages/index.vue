@@ -1,16 +1,15 @@
 <script  setup>
-import { useApi } from '@/utils/api';
 import avatar8 from '@images/avatars/avatar-8.png';
 import avatar2 from '@images/avatars/avatar-2.png';
 import avatar4 from '@images/avatars/avatar-4.png'
 import avatar5 from '@images/avatars/avatar-5.png'
 import avatar6 from '@images/avatars/avatar-6.png'
 import avatar7 from '@images/avatars/avatar-7.png'
-
+import {getStudentList} from '../Api/instApi.js'
 
 import { ref, onMounted } from 'vue';
 import AddClass from "@/views/AddClass.vue"
-
+//展示的学生
 const studentList = ref([
   {
     stuId: '202209512245',
@@ -25,6 +24,7 @@ const studentList = ref([
     className: '1'
   }
 ]);
+//请求的数据
 const data = ref([])
 // 表格头
 const headers = [
@@ -36,7 +36,6 @@ const headers = [
   { title: '学生电话', key: 'stuTel' },
   { title: '联系人', key: 'contact' },
   { title: '联系人电话', key: 'contactTel' },];
-
 const resolveStatusVariant = (status) => {
   if (status === 'Current') return { color: 'primary' };
   else if (status === 'Professional') return { color: 'success' };
@@ -51,10 +50,8 @@ const manAvater = [avatar2,avatar5,avatar7]
 const wmAvater = [avatar4,avatar6,avatar8]
 // 分组的条件
 const groupBy = [{ key: 'className' }];
-
 const getIcon = (props) => props.icon;
-
-// 转换 classId 为具体的班级名称
+// 转换头像
 const updateGroup = (data) => {
   return data.map(item => {
     if (item.sex === '男'){
@@ -65,7 +62,6 @@ const updateGroup = (data) => {
     return item; // 返回修改后的对象
   });
 };
-
 //随机获取数组元素
 const getRandomElement = (arr) =>{
   if (arr && arr.length) {
@@ -75,21 +71,15 @@ const getRandomElement = (arr) =>{
   return null;
 }
 // 请求数据
-const  getStudentList = () => {
-  useApi.post("/inst/getClassStudent", { instId: '2022001' })
-    .then(res => {
-      console.log(res)
-      data.value = res.data.data;
-      data.value = updateGroup(data.value);
-      console.log(data.value)
-      studentList.value = data.value
-      console.log(studentList.value)
-    })
-    .catch(error => {
-      console.error('Error fetching student list:', error);
-    });
-};
+const getData = async () => {
+  const res = await getStudentList({instId:'2022001'});
+  data.value = res.data
+  data.value = updateGroup(data.value)
+  studentList.value=data.value
+}
+//搜索框的值
 const search = ref('')
+//搜索学生
 const searchStudent = ()=>{
   if (search.value ===''){
     studentList.value = data.value
@@ -100,7 +90,7 @@ const searchStudent = ()=>{
 
 // 在组件挂载时请求数据
 onMounted(() => {
-  getStudentList();
+  getData();
 });
 </script>
 <template>

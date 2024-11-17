@@ -2,7 +2,10 @@
 import  {useApi}  from "../utils/api.js";
 import {onMounted, ref, toRefs} from "vue";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
+import { addClasses,getDep } from '../Api/instApi'
+//是否展示对话框
 const isDialogVisible = ref(false)
+//添加的班级数据
 const newClass =ref({
   classId:'',
   className:'',
@@ -11,7 +14,9 @@ const newClass =ref({
   grade:'',
   instId:''
 })
+//二级学院数据
 const depList = ref([])
+//年级
 const gradel = ref([
   {title:'2024级',value:'2024级'},
   {title:'2023级',value:'2023级'},
@@ -19,33 +24,28 @@ const gradel = ref([
   {title:'2021级',value:'2021级'},
 
 ])
+//二级学院Id
 const depId = ref('')
-const tianjia = ()=>{
+const tianjia = async ()=>{
   newClass.value.depId=depId.value
   newClass.value.instId='2022001'
   if (newClass.value.className == '' && newClass.value.major == '' && newClass.value.grade == ''){
     alert('请输入完整信息')
   }else {
-    useApi.post("/classes/addClasses",newClass.value)
-      .then(res=>{
-        if (res.data.code === 1){
-          alert("添加成功")
-          isDialogVisible.value=false
-        }
-      })
+    const res = await addClasses(newClass.value)
+    if (res.code === 1){
+      alert(res.msg)
+    }else{
+      alert("添加失败")
+    }
   }
 }
-const getDep = ()=>{
-  useApi.get("/dep/getDep").then(res=>{
-    console.log("sdasds")
-    console.log(res)
-    depList.value = res.data.data
-  }).catch(err=>{
-    console.log(err)
-  })
+const getDepList = async ()=>{
+  const res = await getDep()
+  depList.value = res.data
 }
 onMounted(()=>{
-  getDep()
+  getDepList()
 })
 
 </script>

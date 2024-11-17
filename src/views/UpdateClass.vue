@@ -1,8 +1,7 @@
 <script setup>
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
- const props = defineProps(['course']);
-const course = toRefs(props)
-console.log(course.value)
+const props = defineProps(['course']);
+//更新后的课程信息
 const updateCourse = ref({
   classId:'',
   courseName:'',
@@ -10,7 +9,9 @@ const updateCourse = ref({
   term:'',
   hour:''
 })
+//对话框是否开启
 const isDialogVisible = ref(false)
+//修改
 const xiugai = () => {
 
 }
@@ -28,19 +29,19 @@ const xiugai = () => {
       <VCardText>
         <VRow class="mb-4">
           <VCol cols="12" md="4">
-            <VTextField label="课程名称" v-model="updateCourse.courseName"/>
+            <VTextField label="课程名称" v-model="updateCourse.courseName" :placeholder="course.courseName"/>
           </VCol>
           <VCol cols="12" md="4">
-            <VTextField label="班级" v-model="updateCourse.classId"/>
+            <VTextField label="班级" v-model="updateCourse.classId" :placeholder="course.className"/>
           </VCol>
           <VCol cols="12" md="4">
-            <VTextField label="学年" v-model="updateCourse.year"/>
+            <VTextField label="学年" v-model="updateCourse.year" :placeholder="course.year"/>
           </VCol>
           <VCol cols="12" md="4">
-            <VTextField label="学期" v-model="updateCourse.term"/>
+            <VTextField label="学期" v-model="updateCourse.term" :placeholder="course.term"/>
           </VCol>
           <VCol cols="12" md="4">
-            <VTextField label="学时" v-model="updateCourse.hour"/>
+            <VTextField label="学时" v-model="updateCourse.hour" :placeholder="course.hour"/>
           </VCol>
         </VRow>
       </VCardText>

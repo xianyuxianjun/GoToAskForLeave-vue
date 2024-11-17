@@ -2,6 +2,7 @@
 import {onMounted, ref, toRefs} from "vue";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 const isDialogVisible = ref(false)
+//课程信息
 const course = ref({
   classId:'',
   courseName:'',

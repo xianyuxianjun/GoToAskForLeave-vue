@@ -18,7 +18,7 @@ const headers = ref([
   {title: '操作',key: 'cao'}
 ])
 //表格数据
-const classData = ref([
+const classData = reactive([
   {
     courseName:'操作系统',
     className:'22软件工程2班',

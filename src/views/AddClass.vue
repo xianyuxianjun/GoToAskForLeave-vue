@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useApi } from '@/utils/api';
+import  {useApi}  from "../utils/api.js";
 import {onMounted, ref, toRefs} from "vue";
 const isDialogVisible = ref(false)
 const newClass =ref({

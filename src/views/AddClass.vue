@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useApi } from "@/utils/api";
-import {ref, toRefs} from "vue";
+import { useApi } from '@/utils/api';
+import {onMounted, ref, toRefs} from "vue";
 const isDialogVisible = ref(false)
 const newClass =ref({
   classId:'',
@@ -10,19 +10,7 @@ const newClass =ref({
   grade:'',
   instId:'                                 '
 })
-const depList = ref([
-  {title:'大数据与软件工程学院',value:'1'},
-  {title:'电信学院',value:'2'},
-  {title:'经济学院',value:'3'},
-  {title:'外国语学院',value:'4'},
-  {title:'文传学院',value:'5'},
-  {title:'食药学院',value:'6'},
-  {title:'管理学院',value:'7'},
-  {title:'教育学院',value:'8'},
-  {title:'体育学院',value:'9'},
-  {title:'法学院',value:'10'},
-  {title:'马克思学院',value:'11'},
-])
+const depList = ref([])
 const gradel = ref([
   {title:'2024级',value:'2024级'},
   {title:'2023级',value:'2023级'},
@@ -42,6 +30,19 @@ const tianjia = ()=>{
       }
     })
 }
+const getDep = ()=>{
+  useApi.get("/dep/getDep").then(res=>{
+    console.log("sdasds")
+    console.log(res)
+    depList.value = res.data.data
+  }).catch(err=>{
+    console.log(err)
+  })
+}
+onMounted(()=>{
+  getDep()
+})
+
 </script>
 
 <template>

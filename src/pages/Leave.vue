@@ -12,7 +12,7 @@ const leaveList = ref([
     stuName:'陈咸鱼',
     reason:'参加校运会',
     daynum:'1',
-    status:'未审批',
+    status:'已通过',
     audittime:'2024-11-14',
     opinion:''
   }

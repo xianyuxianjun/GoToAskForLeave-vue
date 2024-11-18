@@ -1,8 +1,9 @@
 <script setup>
 //搜索框的值
-import {he} from "vuetify/locale";
 import AddCourse from "@/views/AddCourse.vue";
 import UpdateClass from "@/views/UpdateClass.vue";
+import { getCourseList,delectCoursee } from "@/Api/instApi.js"
+import { onMounted } from "vue";
 
 const search = ref('')
 //搜索的函数
@@ -18,16 +19,32 @@ const headers = ref([
   {title: '操作',key: 'cao'}
 ])
 //表格数据
-const classData = reactive([
-  {
-    courseName:'操作系统',
-    className:'22软件工程2班',
-    year:'2024',
-    term:'2',
-    hour:'40',
-    cao:'sad'
-  }
+const courseData = ref([
 ])
+//获取表格数据
+async function getData(){
+  const res = await getCourseList({instId:'2022001'})
+  console.log("asdasd")
+  console.log(res)
+  courseData.value=[]
+  for (let i =0; i<res.data.length; i++){
+    courseData.value.push(res.data[i])
+  }
+}
+//删除课程
+ async function delectCourse(courseId) {
+    await delectCoursee(courseId)
+    await getData()
+    alert("删除成功")
+   console.log("aaa")
+   console.log(courseData)
+}
+function closeDig(){
+  getData()
+}
+onMounted(()=>{
+  getData()
+})
 </script>
 
 <template>
@@ -38,13 +55,13 @@ const classData = reactive([
             <VTextField v-model="search" label="搜索" placeholder="搜索" prepend-inner-icon="ri-search-line" @keyup.enter="searchClass"></VTextField>
           </VCol>
           <VCol cols="12" md="6">
-            <AddCourse></AddCourse>
+            <AddCourse @close="closeDig"></AddCourse>
           </VCol>
         </VRow>
       </VCardText>
-      <VDataTable :headers="headers" :items="classData">
+      <VDataTable :headers="headers" :items="courseData">
       <template #item.cao="{ item }">
-        <VBtn color="error">删除</VBtn>
+        <VBtn color="error" @click="delectCourse(item.courseId)">删除</VBtn>
         <UpdateClass :course ="item"/>
       </template>
       </VDataTable>

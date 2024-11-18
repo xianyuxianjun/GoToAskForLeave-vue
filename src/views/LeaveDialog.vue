@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { useApi } from "@/utils/api";
-import {ref, toRefs} from "vue";
+import {ref, toRefs, watch} from "vue";
 import { updateLeave } from '../Api/instApi'
 const isDialogVisible = ref(false)
 const {leave} = defineProps(['leave'])
-console.log(leave)
 const data = ref({
   leaveId:leave.leaveId,
   courseName:leave.courseName,
@@ -31,14 +30,7 @@ const tongyi =async ()=>{
   const res = await updateLeave(data.value)
   isDialogVisible.value = false
 }
-const isTure = ()=>{
-  if(data.value.status == '未审批'){
-    return true
-  }
-  else {
-    return false
-  }
-}
+const isture = ref(false)
 </script>
 
 <template>
@@ -48,7 +40,7 @@ const isTure = ()=>{
   >
     <!-- Dialog Activator -->
     <template #activator="{ props }">
-      <VBtn v-bind="props" :disabled="isTure">
+      <VBtn v-bind="props" :disabled="data.status === '未审批' ? false : true ">
         批复
       </VBtn>
     </template>

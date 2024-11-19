@@ -1,10 +1,11 @@
 <script setup>
 //搜索框的值
 import AddCourse from "@/views/AddCourse.vue";
-import UpdateClass from "@/views/UpdateClass.vue";
+import UpdateClass from "@/views/UpdateCourse.vue";
 import { getCourseList,delectCoursee } from "@/Api/instApi.js"
 import { onMounted } from "vue";
-
+import {useInstStore} from "@/store/inst.js"
+const instStore = useInstStore();
 const search = ref('')
 //搜索的函数
 const searchClass = () => {
@@ -23,7 +24,7 @@ const courseData = ref([
 ])
 //获取表格数据
 async function getData(){
-  const res = await getCourseList({instId:'2022001'})
+  const res = await getCourseList({instId:instStore.instId})
   console.log("asdasd")
   console.log(res)
   courseData.value=[]
@@ -62,7 +63,7 @@ onMounted(()=>{
       <VDataTable :headers="headers" :items="courseData">
       <template #item.cao="{ item }">
         <VBtn color="error" @click="delectCourse(item.courseId)">删除</VBtn>
-        <UpdateClass :course ="item"/>
+        <UpdateClass :course ="item" @close="closeDig"/>
       </template>
       </VDataTable>
     </VCard>

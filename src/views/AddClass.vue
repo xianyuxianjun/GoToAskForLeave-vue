@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { onMounted, ref, toRefs } from "vue"
-import DialogCloseBtn from "@core/components/DialogCloseBtn.vue"
-import { addClasses, getDep } from "../Api/instApi"
+import DialogCloseBtn from "../@core/components/DialogCloseBtn.vue"
+import { addClasses, getDep } from "../Api/instApi.js"
+import {useInstStore} from "@/store/inst.js"
+const instStore = useInstStore();
+
+const emit = defineEmits(['close'])
 
 //是否展示对话框
 const isDialogVisible = ref(false)
@@ -33,12 +37,15 @@ const depId = ref('')
 
 //添加班级
 const tianjia = async () => {
+  console.log("添加班级")
   newClass.value.depId = depId.value
-  newClass.value.instId = '2022001'
+  newClass.value.instId = instStore.instId
   if (newClass.value.className == '' && newClass.value.major == '' && newClass.value.grade == '') {
     alert('请输入完整信息')
   } else {
     const res = await addClasses(newClass.value)
+    isDialogVisible.value=false
+    emit('close')
   }
 }
 

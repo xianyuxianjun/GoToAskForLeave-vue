@@ -1,24 +1,13 @@
 <script setup lang="ts">
-import { useApi } from "@/utils/api";
+import {useInstStore} from "@/store/inst.js"
+const instStore = useInstStore();
 import LeaveDialog from "@/views/LeaveDialog.vue";
 import {onMounted, ref} from "vue";
-import { getLeaveList } from '../Api/instApi'
+import { getLeaveList } from '../Api/instApi.js'
 const leaveList = ref([
-  {
-    leaveId:'1',
-    courseName:'操作系统',
-    className:'22软件2班',
-    stuId:'202209512245',
-    stuName:'陈咸鱼',
-    reason:'参加校运会',
-    daynum:'1',
-    status:'已通过',
-    audittime:'2024-11-14',
-    opinion:''
-  }
 ])
 const getData = async ()=>{
-  const res = await getLeaveList({instId:'2022001'})
+  const res = await getLeaveList({instId:instStore.instId})
   leaveList.value =res.data
 }
 onMounted(() => {

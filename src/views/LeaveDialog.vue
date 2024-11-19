@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { useApi } from "@/utils/api";
 import {ref, toRefs, watch} from "vue";
-import { updateLeave } from '../Api/instApi'
+import { updateLeave } from '../Api/instApi.js'
+import {useInstStore} from "@/store/inst.js"
+const instStore = useInstStore();
 const isDialogVisible = ref(false)
 const {leave} = defineProps(['leave'])
 const data = ref({
@@ -16,7 +18,6 @@ const data = ref({
   audittime:leave.audittime,
   opinion:leave.opinion
 })
-console.log(data.value)
 //拒绝
 const jujue = async ()=>{
   data.value.status = '未通过'

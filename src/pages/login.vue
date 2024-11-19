@@ -5,6 +5,8 @@ import authV1LoginMaskLight from '@images/pages/auth-v1-login-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { useRouter } from 'vue-router'
+import {useInstStore} from "@/store/inst.js"
+const instStore = useInstStore();
 definePage({ meta: { layout: 'blank' } })
 const router = useRouter();
 const loginForm = ref({

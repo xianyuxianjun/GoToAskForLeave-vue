@@ -1,56 +1,67 @@
 <script setup>
+import { ref } from 'vue'
+import { getDep,updateClasses } from "@/Api/instApi.js"
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
-const props = defineProps(['course']);
-//更新后的课程信息
-const updateCourse = ref({
-  classId:'',
-  courseName:'',
-  year:'',
-  term:'',
-  hour:''
+import {useInstStore} from "@/store/inst.js"
+const instStore = useInstStore();
+const props = defineProps(['classes'])
+const emit = defineEmits(['close'])
+const dia = ref(false)
+const newClass = ref({
 })
-//对话框是否开启
-const isDialogVisible = ref(false)
-//修改
-const xiugai = () => {
-
+newClass.value = props.classes
+const depList = ref([])
+async function getDepList(){
+  const res = await getDep()
+  depList.value = res.data
 }
+//修改班级
+async function xiugai(){
+  const res = await updateClasses(newClass.value)
+  if (res.code === 1){
+    alert("修改成功")
+    emit('close')
+    dia.value = false
+  }else{
+    alert(res.message)
+    dia.value = false
+  }
+}
+onMounted(()=>{
+  getDepList()
+})
 </script>
 
 <template>
-  <VDialog v-model="isDialogVisible" max-width="600">
-    <template #activator="{ props }">
-      <VBtn color="success" v-bind="props">修改</VBtn>
-    </template>
+<VDialog v-model="dia" max-width="600">
+  <template #activator="{ props }">
+    <VBtn v-bind="props">修改</VBtn>
+  </template>
 
-    <VCard title="修改课程">
-      <DialogCloseBtn variant="text" size="default" @click="isDialogVisible=false">
-      </DialogCloseBtn>
-      <VCardText>
-        <VRow class="mb-4">
-          <VCol cols="12" md="4">
-            <VTextField label="课程名称" v-model="updateCourse.courseName" :placeholder="course.courseName"/>
-          </VCol>
-          <VCol cols="12" md="4">
-            <VTextField label="班级" v-model="updateCourse.classId" :placeholder="course.className"/>
-          </VCol>
-          <VCol cols="12" md="4">
-            <VTextField label="学年" v-model="updateCourse.year" :placeholder="course.year"/>
-          </VCol>
-          <VCol cols="12" md="4">
-            <VTextField label="学期" v-model="updateCourse.term" :placeholder="course.term"/>
-          </VCol>
-          <VCol cols="12" md="4">
-            <VTextField label="学时" v-model="updateCourse.hour" :placeholder="course.hour"/>
-          </VCol>
-        </VRow>
-      </VCardText>
-      <VCardText class="d-flex justify-end flex-wrap gap-4">
-        <VBtn color="error" @click="isDialogVisible=false">取消</VBtn>
-        <VBtn color="success" @click="xiugai">修改</VBtn>
-      </VCardText>
-    </VCard>
-  </VDialog>
+  <VCard title="修改班级">
+    <DialogCloseBtn variant="text" size="default" @click="dia=false"></DialogCloseBtn>
+    <VCardText>
+      <VRow class="mb-4">
+        <VCol cols="12" md="4">
+          <VTextField label="班级名称" v-model="newClass.className"/>
+        </VCol>
+        <VCol cols="12" md="4">
+          <VSelect :items="depList" label="学院" v-model="newClass.depId"/>
+        </VCol>
+        <VCol cols="12" md="4">
+          <VTextField label="年级" v-model="newClass.grade"/>
+        </VCol>
+        <VCol cols="12" md="4">
+          <VTextField label="专业" v-model="newClass.major"/>
+        </VCol>
+      </VRow>
+    </VCardText>
+    <VCardText class="d-flex justify-end flex-wrap gap-4">
+      <VBtn color="error" @click="dia=false">取消</VBtn>
+      <VBtn color="success" @click="xiugai">修改</VBtn>
+    </VCardText>
+  </VCard>
+</VDialog>
 </template>
 
 <style scoped lang="scss">

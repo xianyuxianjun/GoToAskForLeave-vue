@@ -62,3 +62,18 @@ export async function  getClassData(instId){
     const res = await useApi.post("/classes/getClassByInstId",{instId:instId})
     return res.data
 }
+
+export async function  updateCourse(course){
+    const res = await useApi.post("/course/updateCourse",course)
+    return res.data
+}
+
+export async function updateClasses(classes){
+    const res = await useApi.post("/classes/updateClasses",classes)
+    return res.data
+}
+
+export async function delectClasses(classId){
+    const res = await useApi.post("/classes/delectClasses",{classId:classId})
+    return res.data
+}

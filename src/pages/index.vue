@@ -1,8 +1,10 @@
 <script  setup>
 import AddClass from "@/views/AddClass.vue";
 import { ref,onMounted} from "vue";
-import { getClassData } from "@/Api/instApi.js"
-
+import {delectClasses, getClassData} from "@/Api/instApi.js"
+import UpdateClass from "@/views/UpdateClass.vue";
+import {useInstStore} from "@/store/inst.js"
+const instStore = useInstStore();
 const search = ref('')
 const headers = reactive([
   {title:'班级',key:'className'},
@@ -16,8 +18,18 @@ const headers = reactive([
 const classData = ref([{
 }])
 async function getData(){
-  const res = await getClassData("2022001")
+  const res = await getClassData(instStore.instId)
   classData.value = res.data
+}
+
+async function detectClass(classId){
+  const res = await delectClasses(classId)
+  if (res.code === 1){
+    alert("删除成功")
+    getData()
+  }else{
+    alert(res.message)
+  }
 }
 
 function searchClasses(){
@@ -36,7 +48,7 @@ onMounted(()=>{
           <VTextField v-model="search" label="搜索" placeholder="搜索" prepend-inner-icon="ri-search-line" @keyup.enter="searchClasses"></VTextField>
         </VCol>
         <VCol cols="12" md="2">
-          <AddClass></AddClass>
+          <AddClass @close="getData"></AddClass>
         </VCol>
       </VRow>
     </VCardText>
@@ -45,8 +57,8 @@ onMounted(()=>{
       :items="classData"
     >
     <template #item.cao="{ item }">
-      <VBtn color="error+">删除</VBtn>
-      <VBtn>修改</VBtn>
+      <VBtn color="error" @click="detectClass(item.classId)">删除</VBtn>
+      <UpdateClass :classes="item"/>
     </template>
     </VDataTable>
   </VCard>

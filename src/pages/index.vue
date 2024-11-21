@@ -56,6 +56,9 @@ onMounted(()=>{
       :headers="headers"
       :items="classData"
     >
+      <template #item.className="{ item }">
+        <RouterLink to="/ClassStudent">{{ item.className }}</RouterLink>
+      </template>
     <template #item.cao="{ item }">
       <VBtn color="error" @click="detectClass(item.classId)">删除</VBtn>
       <UpdateClass :classes="item"/>

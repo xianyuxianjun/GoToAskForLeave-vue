@@ -3,6 +3,7 @@ import {onMounted, ref, toRefs} from "vue";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 import { getClassList,addCourse } from '../Api/instApi.js'
 import {useUserStore} from "@/store/user.js"
+import { clearObjectValues } from "@/utils/clearObjectValues"
 const userStore = useUserStore();
 const isDialogVisible = ref(false)
 const emit = defineEmits(['close']);
@@ -20,7 +21,7 @@ const classList = ref([
 
 //获取辅导员的班级列表
 const getData = async () => {
-  const res = await getClassList({instId:userStore.instId})
+  const res = await getClassList({instId:userStore.userId})
   console.log("sadad")
   console.log(res)
   classList.value = res.data
@@ -30,6 +31,11 @@ const tianjia = async () => {
   const res = await addCourse(course.value)
   if(res.code == 1){
     alert('添加成功')
+    course.value.courseName=''
+    course.value.year=''
+    course.value.term=''
+    course.value.hour=''
+    course.value.classId=''
     isDialogVisible.value=false
     emit('close')
   }else
@@ -37,6 +43,7 @@ const tianjia = async () => {
     isDialogVisible.value = false
 }
 onMounted(()=>{
+
   getData()
 })
 </script>

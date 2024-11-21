@@ -353,6 +353,7 @@
     "whenever": true,
     "api": true,
     "service": true,
-    "isObjectEmpty": true
+    "isObjectEmpty": true,
+    "clearObjectValues": true
   }
 }

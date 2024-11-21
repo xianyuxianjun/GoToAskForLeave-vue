@@ -49,8 +49,7 @@ const resolveStatusVariant = (status) => {
 const manAvater = [avatar2,avatar5,avatar7]
 //女生头像
 const wmAvater = [avatar4,avatar6,avatar8]
-// 分组的条件
-const groupBy = [{ key: 'className' }];
+
 const getIcon = (props) => props.icon;
 // 转换头像
 const updateGroup = (data) => {
@@ -72,12 +71,12 @@ const getRandomElement = (arr) =>{
   return null;
 }
 // 请求数据
-const getData = async () => {
-  const res = await getStudentList({instId:userStore.userId});
-  data.value = res.data
-  data.value = updateGroup(data.value)
-  studentList.value=data.value
-}
+// const getData = async () => {
+//   const res = await getStudentList({instId:userStore.userId});
+//   data.value = res.data
+//   data.value = updateGroup(data.value)
+//   studentList.value=data.value
+// }
 //搜索框的值
 const search = ref('')
 //搜索学生
@@ -91,12 +90,18 @@ const searchStudent = ()=>{
 
 // 在组件挂载时请求数据
 onMounted(() => {
-  getData();
+  // getData();
 });
 </script>
 
 <template>
+  <VCard>
+    <VCardText>
+      <VDataTable :headers="headers" :items="studentList">
 
+      </VDataTable>
+    </VCardText>
+  </VCard>
 </template>
 
 <style scoped lang="scss">

@@ -5,6 +5,7 @@ import UpdateClass from "@/views/UpdateCourse.vue";
 import { getCourseList,delectCoursee } from "@/Api/instApi.js"
 import { onMounted } from "vue";
 import {useUserStore} from "@/store/user.js"
+import { clearObjectValues} from "@/utils/clearObjectValues.js"
 const userStore = useUserStore();
 const search = ref('')
 //搜索的函数

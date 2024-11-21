@@ -352,6 +352,7 @@
     "watchWithFilter": true,
     "whenever": true,
     "api": true,
-    "service": true
+    "service": true,
+    "isObjectEmpty": true
   }
 }

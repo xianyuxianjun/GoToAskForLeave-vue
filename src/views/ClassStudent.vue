@@ -7,8 +7,8 @@ import avatar6 from '@images/avatars/avatar-6.png'
 import avatar7 from '@images/avatars/avatar-7.png'
 import {getStudentList} from '../Api/instApi.js'
 import { ref, onMounted } from 'vue';
-import {useInstStore} from "@/store/inst.js"
-const instStore = useInstStore();
+import {useUserStore} from "@/store/user.js"
+const userStore = useUserStore();
 //展示的学生
 const studentList = ref([
   {
@@ -73,7 +73,7 @@ const getRandomElement = (arr) =>{
 }
 // 请求数据
 const getData = async () => {
-  const res = await getStudentList({instId:instStore.instId});
+  const res = await getStudentList({instId:userStore.userId});
   data.value = res.data
   data.value = updateGroup(data.value)
   studentList.value=data.value

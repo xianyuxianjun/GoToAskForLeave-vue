@@ -3,8 +3,8 @@ import AddClass from "@/views/AddClass.vue";
 import { ref,onMounted} from "vue";
 import {delectClasses, getClassData} from "@/Api/instApi.js"
 import UpdateClass from "@/views/UpdateClass.vue";
-import {useInstStore} from "@/store/inst.js"
-const instStore = useInstStore();
+import {useUserStore} from "@/store/user.js"
+const userStore = useUserStore();
 const search = ref('')
 const headers = reactive([
   {title:'班级',key:'className'},
@@ -18,7 +18,7 @@ const headers = reactive([
 const classData = ref([{
 }])
 async function getData(){
-  const res = await getClassData(instStore.instId)
+  const res = await getClassData(userStore.userId)
   classData.value = res.data
 }
 

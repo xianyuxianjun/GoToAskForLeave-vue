@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {useInstStore} from "@/store/inst.js"
-const instStore = useInstStore();
+import { useUserStore } from "@/store/user.js"
+const userStore = useUserStore();
 import LeaveDialog from "@/views/LeaveDialog.vue";
 import {onMounted, ref} from "vue";
 import { getLeaveList } from '../Api/instApi.js'
 const leaveList = ref([
 ])
 const getData = async ()=>{
-  const res = await getLeaveList({instId:instStore.instId})
+  const res = await getLeaveList({instId:userStore.userId})
   leaveList.value =res.data
 }
 onMounted(() => {

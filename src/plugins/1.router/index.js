@@ -1,7 +1,6 @@
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router/auto'
-import { useInstStore } from '@/store/inst.js'
-
+import { useUserStore } from '@/store/user.js'
 /**
  * 递归地为每个路由设置布局
  * @param {Object} route 路由对象
@@ -31,6 +30,18 @@ const router = createRouter({
         ...[...pages].map(route => recursiveLayouts(route)), // 为每个路由设置布局
     ],
 })
+router.beforeEach((to, from, next) => {
+    const userId = useUserStore().userId;
+    // 如果 instId 为空并且不是已经处于 /login 页面，则重定向到 /login
+    if (userId === '' && to.path !== '/login') {
+        if (to.path == '/Register'){
+            next()
+        }
+        next('/login');
+    } else {
+        next();
+    }
+});
 
 // 导出路由实例
 export { router }

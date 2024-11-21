@@ -19,7 +19,7 @@ const configStore = useConfigStore()
 
 <template>
   <VLocaleProvider :rtl="configStore.isAppRTL">
-    <!-- ℹ️ This is required to set the background color of active nav link based on currently active global theme's primary -->
+    <!-- ℹ️ 这是根据当前活动的全局主题的主色设置活动导航链接背景颜色所需的 -->
     <VApp :style="`--v-global-theme-primary: ${hexToRgb(global.current.value.colors.primary)}`">
       <RouterView />
 

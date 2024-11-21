@@ -1,10 +1,10 @@
 <script setup>
 const { injectSkinClasses } = useSkins()
 
-// ℹ️ This will inject classes in body tag for accurate styling
+// ℹ️ 这将向 body 标签注入类以实现准确的样式
 injectSkinClasses()
 
-// SECTION: Loading Indicator
+// SECTION: 加载指示器
 const isFallbackStateActive = ref(false)
 const refLoadingIndicator = ref(null)
 

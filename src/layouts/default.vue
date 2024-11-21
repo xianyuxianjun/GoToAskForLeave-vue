@@ -25,6 +25,5 @@ injectSkinClasses()
 </template>
 
 <style lang="scss">
-// As we are using `layouts` plugin we need its styles to be imported
-@use "@layouts/styles/default-layout";
+// 由于我们使用了`layouts`插件，因此需要导入其样式@use "@layouts/styles/default-layout";
 </style>

@@ -2,8 +2,8 @@
 import { onMounted, ref, toRefs } from "vue"
 import DialogCloseBtn from "../@core/components/DialogCloseBtn.vue"
 import { addClasses, getDep } from "../Api/instApi.js"
-import {useInstStore} from "@/store/inst.js"
-const instStore = useInstStore();
+import {useUserStore} from "@/store/user.js"
+const userStore = useUserStore();
 
 const emit = defineEmits(['close'])
 
@@ -39,7 +39,7 @@ const depId = ref('')
 const tianjia = async () => {
   console.log("添加班级")
   newClass.value.depId = depId.value
-  newClass.value.instId = instStore.instId
+  newClass.value.instId = userStore.userId
   if (newClass.value.className == '' && newClass.value.major == '' && newClass.value.grade == '') {
     alert('请输入完整信息')
   } else {

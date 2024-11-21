@@ -2,8 +2,8 @@
 import {onMounted, ref, toRefs} from "vue";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 import { getClassList,addCourse } from '../Api/instApi.js'
-import {useInstStore} from "@/store/inst.js"
-const instStore = useInstStore();
+import {useUserStore} from "@/store/user.js"
+const userStore = useUserStore();
 const isDialogVisible = ref(false)
 const emit = defineEmits(['close']);
 //课程信息
@@ -20,7 +20,7 @@ const classList = ref([
 
 //获取辅导员的班级列表
 const getData = async () => {
-  const res = await getClassList({instId:instStore.instId})
+  const res = await getClassList({instId:userStore.instId})
   console.log("sadad")
   console.log(res)
   classList.value = res.data

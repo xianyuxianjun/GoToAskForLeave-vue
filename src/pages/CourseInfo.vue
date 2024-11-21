@@ -4,8 +4,8 @@ import AddCourse from "@/views/AddCourse.vue";
 import UpdateClass from "@/views/UpdateCourse.vue";
 import { getCourseList,delectCoursee } from "@/Api/instApi.js"
 import { onMounted } from "vue";
-import {useInstStore} from "@/store/inst.js"
-const instStore = useInstStore();
+import {useUserStore} from "@/store/user.js"
+const userStore = useUserStore();
 const search = ref('')
 //搜索的函数
 const searchClass = () => {
@@ -24,7 +24,7 @@ const courseData = ref([
 ])
 //获取表格数据
 async function getData(){
-  const res = await getCourseList({instId:instStore.instId})
+  const res = await getCourseList({instId:userStore.userId})
   console.log("asdasd")
   console.log(res)
   courseData.value=[]

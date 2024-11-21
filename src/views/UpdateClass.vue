@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { getDep,updateClasses } from "@/Api/instApi.js"
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
-import {useInstStore} from "@/store/inst.js"
-const instStore = useInstStore();
+import {useUserStore} from "@/store/user.js"
+const userStore = useUserStore();
 const props = defineProps(['classes'])
 const emit = defineEmits(['close'])
 const dia = ref(false)

@@ -5,11 +5,13 @@ import avatar4 from '@images/avatars/avatar-4.png'
 import avatar5 from '@images/avatars/avatar-5.png'
 import avatar6 from '@images/avatars/avatar-6.png'
 import avatar7 from '@images/avatars/avatar-7.png'
-import {getStudentList,delectStudent} from '../Api/instApi.js'
+import {getStudentList, delectStudent, addStudent} from '../Api/instApi.js'
 import { ref, onMounted } from 'vue';
 import {useUserStore} from "@/store/user.js"
 import {useRouter} from "vue-router";
 import {useClassesStore} from "@/store/classes.js";
+import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
+import {isObjectEmpty} from "@/utils/isObjectEmpty.js";
 const classStore = useClassesStore();
 const router = useRouter()
 const classId = ref('')
@@ -116,10 +118,42 @@ onMounted(() => {
   classId.value = classStore.classId
   getData(classId.value)
 });
+
+const stuDig = ref(false)
+function addStudentDig(){
+  stuDig.value = true
+}
+const student = ref({})
+async function tianjia(){
+  if (!isObjectEmpty(student.value)){
+    alert("请输入完整信息")
+    return
+  }
+  student.value.classId=classId.value
+  student.value.instId = userStore.userId
+  student.value.role = "学生"
+  const res = await addStudent(student.value)
+  if (res.code === 1){
+    alert("添加成功")
+    student.value = {}
+    stuDig.value = false
+  }
+}
+
 </script>
 
 <template>
   <VCard>
+    <VCardText>
+      <VRow class="mb-4">
+        <VCol cols="12" md="2">
+          <VTextField v-model="search" label="搜索" placeholder="搜索" prepend-inner-icon="ri-search-line" @keyup.enter="searchStudent"></VTextField>
+        </VCol>
+        <VCol cols="12" md="2">
+          <VBtn @click="addStudentDig">添加学生</VBtn>
+        </VCol>
+      </VRow>
+    </VCardText>
     <VCardText>
       <VDataTable :headers="headers" :items="studentList">
         <template #item.stuName="{ item }">
@@ -191,6 +225,54 @@ onMounted(() => {
 
         <VSpacer />
       </VCardActions>
+    </VCard>
+  </VDialog>
+  <VDialog v-model="stuDig" max-width="600px">
+    <DialogCloseBtn
+      variant="text"
+      size="default"
+      @click="stuDig = false"
+    />
+    <VCard title="添加学生">
+      <VCardText class="mb-4">
+        <VRow>
+          <VCol cols="12" md="4">
+            <VTextField label="姓名" v-model="student.stuName"></VTextField>
+          </VCol>
+          <VCol cols="12" md="4">
+            <VSelect  :items="[{title:'男',value:'男'},{title: '女',value: '女'}]" label="性别" v-model="student.sex"/>
+          </VCol>
+          <VCol cols="12" md="4">
+            <VTextField label="邮箱" v-model="student.email"></VTextField>
+          </VCol>
+          <VCol cols="12" md="4">
+            <VTextField label="学生电话" v-model="student.stuTel"></VTextField>
+          </VCol>
+          <VCol cols="12" md="4">
+            <VTextField label="联系人" v-model="student.contact"></VTextField>
+          </VCol>
+          <VCol cols="12" md="4">
+            <VTextField label="联系人电话" v-model="student.contactTel"></VTextField>
+          </VCol>
+          <VCol cols="12">
+            <VTextField label="通讯地址" v-model="student.address"></VTextField>
+          </VCol>
+        </VRow>
+      </VCardText>
+      <VCardText class="d-flex justify-end flex-wrap gap-4">
+        <VBtn
+          color="error"
+          @click="stuDig=false"
+        >
+          取消
+        </VBtn>
+        <VBtn
+          color="success"
+          @click="tianjia"
+        >
+          添加
+        </VBtn>
+      </VCardText>
     </VCard>
   </VDialog>
 </template>

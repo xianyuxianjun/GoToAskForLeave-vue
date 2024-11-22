@@ -82,3 +82,8 @@ export async function delectStudent(studentId){
     const res = await useApi.post("/student/delectStudent",{stuId:studentId})
     return res.data
 }
+
+export async function addStudent(student){
+    const res = await useApi.post("/student/addStudent",student)
+    return res.data
+}

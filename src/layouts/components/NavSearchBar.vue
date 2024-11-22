@@ -149,7 +149,7 @@ const fetchResults = async () => {
 
   searchResult.value = data.value
 
-  // ℹ️ simulate loading: we have used setTimeout for better user experience your can remove it
+  // ℹ️ simulate loading: we have used setTimeout for better user.js experience your can remove it
   setTimeout(() => {
     isLoading.value = false
   }, 500)

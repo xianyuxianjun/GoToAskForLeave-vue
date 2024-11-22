@@ -4,7 +4,10 @@ import { ref,onMounted} from "vue";
 import {delectClasses, getClassData} from "@/Api/instApi.js"
 import UpdateClass from "@/views/UpdateClass.vue";
 import {useUserStore} from "@/store/user.js"
+import {useClassesStore} from "@/store/classes.js";
+
 const userStore = useUserStore();
+const classStore = useClassesStore();
 const search = ref('')
 const headers = reactive([
   {title:'班级',key:'className'},
@@ -14,12 +17,13 @@ const headers = reactive([
   {title:'人数',key:'num'},
   {title:'操作',key:'cao'}
 ])
-
+const classList = ref([])
 const classData = ref([{
 }])
 async function getData(){
   const res = await getClassData(userStore.userId)
   classData.value = res.data
+  classList.value = classData.value
 }
 
 async function detectClass(classId){
@@ -31,9 +35,15 @@ async function detectClass(classId){
     alert(res.message)
   }
 }
-
+function toStudentList(item){
+  classStore.classId = item.classId
+}
 function searchClasses(){
-
+  if (search.value === ''){
+    getData()
+    return
+  }
+  classList.value = classData.value.filter(item => item.className===search.value)
 }
 
 onMounted(()=>{
@@ -54,10 +64,10 @@ onMounted(()=>{
     </VCardText>
     <VDataTable
       :headers="headers"
-      :items="classData"
+      :items="classList"
     >
       <template #item.className="{ item }">
-        <RouterLink to="/ClassStudent">{{ item.className }}</RouterLink>
+        <RouterLink to="/ClassStudent" @click="toStudentList(item)">{{ item.className }}</RouterLink>
       </template>
     <template #item.cao="{ item }">
       <VBtn color="error" @click="detectClass(item.classId)">删除</VBtn>

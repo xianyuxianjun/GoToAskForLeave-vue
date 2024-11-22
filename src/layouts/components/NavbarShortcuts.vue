@@ -13,10 +13,10 @@ const shortcuts = [
     to: { name: 'apps-invoice-list' },
   },
   {
-    icon: 'ri-user-line',
+    icon: 'ri-user.js-line',
     title: 'Users',
     subtitle: 'Manage Users',
-    to: { name: 'apps-user-list' },
+    to: { name: 'apps-user.js-list' },
   },
   {
     icon: 'ri-computer-line',

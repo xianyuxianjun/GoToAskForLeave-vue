@@ -6,7 +6,7 @@ const userProfileList = [
   { type: 'divider' },
   {
     type: 'navItem',
-    icon: 'ri-user-line',
+    icon: 'ri-user.js-line',
     title: 'Profile',
     href: '#',
   },

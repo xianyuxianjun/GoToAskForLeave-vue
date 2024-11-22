@@ -10,6 +10,11 @@ const userStore = useUserStore();
 const search = ref('')
 //搜索的函数
 const searchClass = () => {
+  if (search.value === ''){
+    getData()
+    return
+  }
+  courseList.value = courseData.value.filter(item => item.courseName === search.value)
 }
 //表格头
 const headers = ref([
@@ -23,15 +28,12 @@ const headers = ref([
 //表格数据
 const courseData = ref([
 ])
+const courseList = ref([])
 //获取表格数据
 async function getData(){
   const res = await getCourseList({instId:userStore.userId})
-  console.log("asdasd")
-  console.log(res)
-  courseData.value=[]
-  for (let i =0; i<res.data.length; i++){
-    courseData.value.push(res.data[i])
-  }
+  courseData.value = res.data
+  courseList.value = courseData.value
 }
 //删除课程
  async function delectCourse(courseId) {
@@ -61,7 +63,7 @@ onMounted(()=>{
           </VCol>
         </VRow>
       </VCardText>
-      <VDataTable :headers="headers" :items="courseData">
+      <VDataTable :headers="headers" :items="courseList">
       <template #item.cao="{ item }">
         <VBtn color="error" @click="delectCourse(item.courseId)">删除</VBtn>
         <UpdateClass :course ="item" @close="closeDig"/>

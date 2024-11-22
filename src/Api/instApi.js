@@ -1,8 +1,8 @@
 import {useApi} from "@/utils/api.js";
 
 //根据辅导员id获取辅导员所负责的学生
-export const  getStudentList =  async (instId) => {
-    const res = await useApi.post("inst/getClassStudent",instId)
+export const  getStudentList =  async (classId) => {
+    const res = await useApi.post("student/getStudentByClassId",{classId:classId})
     return res.data;
 }
 
@@ -75,5 +75,10 @@ export async function updateClasses(classes){
 
 export async function delectClasses(classId){
     const res = await useApi.post("/classes/delectClasses",{classId:classId})
+    return res.data
+}
+
+export async function delectStudent(studentId){
+    const res = await useApi.post("/student/delectStudent",{stuId:studentId})
     return res.data
 }

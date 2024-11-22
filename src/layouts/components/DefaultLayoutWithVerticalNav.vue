@@ -1,8 +1,24 @@
 <script setup>
-import navItems from '@/navigation/vertical'
+import instItem from '@/navigation/vertical/inst.js'
+import userItem from '@/navigation/vertical/user.js'
+import studentItem from "@/navigation/vertical/student.js";
 import { useConfigStore } from '@core/stores/config'
 import { themeConfig } from '@themeConfig'
-
+import {onMounted} from "vue";
+import {useUserStore} from "@/store/user.js";
+const userStore = useUserStore()
+const navItems = ref([])
+onMounted(()=>{
+  if (userStore.role==='学生'){
+    navItems.value = studentItem
+  }
+  if (userStore.role==='辅导员'){
+    navItems.value = instItem
+  }
+  if (userStore.role === '管理员'){
+    navItems.value = userItem
+  }
+})
 // Components
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'

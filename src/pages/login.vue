@@ -28,8 +28,8 @@ const login =  async () => {
   if (res.data === null){
     alert("登录失败")
   }else{
-    userStore.userId = res.data.userId
-    userStore.role = res.data.role
+    localStorage.setItem('userId',res.data.userId)
+    localStorage.setItem('role',res.data.role)
     alert('登陆成功')
     await router.push("/")
   }

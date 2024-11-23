@@ -7,6 +7,7 @@ export async function getLeaveData(userId){
 
 export async function addleave(leave){
     const res = await useApi.post("/leave/addLeave",leave)
+    return res.data
 }
 
 export async function  getCourse(stuId){

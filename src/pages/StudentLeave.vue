@@ -40,6 +40,9 @@ async function getData(){
 //获取学生的课程列表
 async function getcourseList(){
   const res = await getCourse(userStore.userId)
+  console.log("aaa")
+  console.log(res)
+  courseList.value = res.data
 }
 onMounted(()=>{
   getData()
@@ -57,6 +60,7 @@ async function shenqing(){
   }
   leave.value.stuId = userStore.userId
   const res = await addleave(leave.value)
+  console.log(res)
   if (res.code ===1){
     alert("申请成功")
     await getData()

@@ -115,7 +115,7 @@ async function deleteItemConfirm(){
 }
 // 在组件挂载时请求数据
 onMounted(() => {
-  classId.value = classStore.classId
+  classId.value = localStorage.getItem('classId')
   getData(classId.value)
 });
 

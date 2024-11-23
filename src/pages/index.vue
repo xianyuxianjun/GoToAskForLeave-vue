@@ -36,7 +36,7 @@ async function detectClass(classId){
   }
 }
 function toStudentList(item){
-  classStore.classId = item.classId
+  localStorage.setItem('classId',item.classId)
 }
 function searchClasses(){
   if (search.value === ''){

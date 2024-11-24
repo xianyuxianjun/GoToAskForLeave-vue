@@ -35,7 +35,12 @@ const xiugai = async () => {
 <template>
   <VDialog v-model="isDialogVisible" max-width="600">
     <template #activator="{ props }">
-      <VBtn color="success" v-bind="props">修改</VBtn>
+      <IconBtn
+        size="small"
+        v-bind="props"
+      >
+        <VIcon icon="ri-pencil-line" />
+      </IconBtn>
     </template>
 
     <VCard title="修改课程">

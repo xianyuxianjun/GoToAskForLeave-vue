@@ -36,12 +36,11 @@ async function getData(){
   courseList.value = courseData.value
 }
 //删除课程
- async function delectCourse(courseId) {
-    await delectCoursee(courseId)
+ async function delectCourse() {
+    await delectCoursee(delectIndex.value)
     await getData()
     alert("删除成功")
-   console.log("aaa")
-   console.log(courseData)
+   delectDig.value = false
 }
 function closeDig(){
   getData()
@@ -49,6 +48,12 @@ function closeDig(){
 onMounted(()=>{
   getData()
 })
+const delectIndex = ref('')
+function deleteItem(item){
+  delectIndex.value = item.courseId
+  delectDig.value = true
+}
+const delectDig = ref(false)
 </script>
 
 <template>
@@ -65,10 +70,47 @@ onMounted(()=>{
       </VCardText>
       <VDataTable :headers="headers" :items="courseList">
       <template #item.cao="{ item }">
-        <VBtn color="error" @click="delectCourse(item.courseId)">删除</VBtn>
+        <IconBtn
+          size="small"
+          @click="deleteItem(item)"
+        >
+          <VIcon icon="ri-delete-bin-line" />
+        </IconBtn>
         <UpdateClass :course ="item" @close="closeDig"/>
       </template>
       </VDataTable>
+      <VDialog
+        v-model="delectDig"
+        max-width="500px"
+      >
+        <VCard>
+          <VCardTitle>
+            你是否要删除该kec
+          </VCardTitle>
+
+          <VCardActions>
+            <VSpacer />
+
+            <VBtn
+              color="error"
+              variant="outlined"
+              @click="delectDig=false"
+            >
+              取消
+            </VBtn>
+
+            <VBtn
+              color="success"
+              variant="elevated"
+              @click="delectCourse"
+            >
+              删除
+            </VBtn>
+
+            <VSpacer />
+          </VCardActions>
+        </VCard>
+      </VDialog>
     </VCard>
 </template>
 

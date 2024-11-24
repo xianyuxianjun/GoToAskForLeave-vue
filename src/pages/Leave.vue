@@ -26,11 +26,12 @@ const classList = ref([])
 async function select(){
   leaveList.value = leaveData.value.filter(item => item.className = classes.value)
 }
-async function deleteItem(item){
-  const res = await delectLeave(item.leaveId)
+async function deleteItem(){
+  const res = await delectLeave(delectIndex.value)
   if (res.code === 1){
     alert("删除成功")
      await getData()
+    delectDig.value =false
     return
   }
   alert("删除失败："+res.message)
@@ -39,6 +40,12 @@ onMounted(() => {
   getData()
   getClass()
 });
+const delectIndex = ref('')
+const delectDig = ref(false)
+function delect(item){
+  delectIndex.value = item.leaveId
+  delectDig.value=false
+}
 </script>
 
 <template>
@@ -124,7 +131,7 @@ onMounted(() => {
           <LeaveDialog :leave="item"></LeaveDialog>
           <IconBtn
             size="small"
-            @click="deleteItem(item)"
+            @click="delect(item)"
           >
             <VIcon icon="ri-delete-bin-line" />
           </IconBtn>
@@ -132,5 +139,37 @@ onMounted(() => {
       </tr>
       </tbody>
     </VTable>
+    <VDialog
+      v-model="delectDig"
+      max-width="500px"
+    >
+      <VCard>
+        <VCardTitle>
+          你是否要删除该请假记录
+        </VCardTitle>
+
+        <VCardActions>
+          <VSpacer />
+
+          <VBtn
+            color="error"
+            variant="outlined"
+            @click="delectDig=false"
+          >
+            取消
+          </VBtn>
+
+          <VBtn
+            color="success"
+            variant="elevated"
+            @click="deleteItem"
+          >
+            删除
+          </VBtn>
+
+          <VSpacer />
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </VCard>
 </template>

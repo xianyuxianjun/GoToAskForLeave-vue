@@ -24,3 +24,13 @@ export async function getAllClasses(){
     const res = await useApi.post("/classes/getAllClasses")
     return res.data
 }
+
+export async function getInstItem(){
+    const res = await useApi.post("/inst/getInstItem")
+    return res.data
+}
+
+export async function updateClassesAdmin(classes){
+    const res = await useApi.post("/classes/updateClassesAdmin",classes)
+    return res.data
+}

@@ -26,11 +26,12 @@ async function getData(){
   classList.value = classData.value
 }
 
-async function detectClass(classId){
-  const res = await delectClasses(classId)
+async function detectClass(){
+  const res = await delectClasses(delectIndex.value)
   if (res.code === 1){
     alert("删除成功")
     getData()
+    deleteDialog.value=false
   }else{
     alert(res.message)
   }
@@ -45,7 +46,12 @@ function searchClasses(){
   }
   classList.value = classData.value.filter(item => item.className===search.value)
 }
-
+const deleteDialog = ref(false)
+const delectIndex = ref('')
+function deleteItem(item){
+  deleteDialog.value = true
+  delectIndex.value = item.classId
+}
 onMounted(()=>{
   getData()
 })
@@ -70,10 +76,47 @@ onMounted(()=>{
         <RouterLink to="/ClassStudent" @click="toStudentList(item)">{{ item.className }}</RouterLink>
       </template>
       <template #item.cao="{ item }">
-        <VBtn color="error" @click="detectClass(item.classId)">删除</VBtn>
+          <IconBtn
+            size="small"
+            @click="deleteItem(item)"
+          >
+            <VIcon icon="ri-delete-bin-line" />
+          </IconBtn>
         <UpdateClass :classes="item"/>
       </template>
     </VDataTable>
+    <VDialog
+      v-model="deleteDialog"
+      max-width="500px"
+    >
+      <VCard>
+        <VCardTitle>
+          你是否要删除该学生
+        </VCardTitle>
+
+        <VCardActions>
+          <VSpacer />
+
+          <VBtn
+            color="error"
+            variant="outlined"
+            @click="deleteDialog=false"
+          >
+            取消
+          </VBtn>
+
+          <VBtn
+            color="success"
+            variant="elevated"
+            @click="detectClass"
+          >
+            删除
+          </VBtn>
+
+          <VSpacer />
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </VCard>
 
 </template>

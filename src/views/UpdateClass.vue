@@ -35,7 +35,12 @@ onMounted(()=>{
 <template>
 <VDialog v-model="dia" max-width="600">
   <template #activator="{ props }">
-    <VBtn v-bind="props">修改</VBtn>
+      <IconBtn
+        size="small"
+        v-bind="props"
+      >
+        <VIcon icon="ri-pencil-line" />
+      </IconBtn>
   </template>
 
   <VCard title="修改班级">

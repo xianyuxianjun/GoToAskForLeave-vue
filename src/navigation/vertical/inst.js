@@ -1,7 +1,7 @@
 export default [
   {
     title: '班级管理',
-    to: { name: 'root' },
+    to: { name: 'classes' },
     icon: { icon: 'ri-home-smile-2-line' },
   },
     {

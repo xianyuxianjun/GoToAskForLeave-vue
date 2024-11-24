@@ -1,43 +1,15 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { ref } from "vue"
 import avatar1 from '@images/avatars/avatar-1.png'
-
+const username = ref(localStorage.getItem("username"))
+const role = ref(localStorage.getItem("role"))
 const userProfileList = [
   { type: 'divider' },
   {
     type: 'navItem',
     icon: 'ri-user.js-line',
-    title: 'Profile',
-    href: '#',
-  },
-  {
-    type: 'navItem',
-    icon: 'ri-settings-4-line',
-    title: 'Settings',
-    href: '#',
-  },
-  {
-    type: 'navItem',
-    icon: 'ri-file-text-line',
-    title: 'Billing Plan',
-    href: '#',
-    chipsProps: {
-      color: 'error',
-      text: '4',
-      size: 'small',
-    },
-  },
-  { type: 'divider' },
-  {
-    type: 'navItem',
-    icon: 'ri-money-dollar-circle-line',
-    title: 'Pricing',
-    href: '#',
-  },
-  {
-    type: 'navItem',
-    icon: 'ri-question-line',
-    title: 'FAQ',
+    title: '资料',
     href: '#',
   },
 ]
@@ -75,10 +47,10 @@ const userProfileList = [
 
               <div>
                 <div class="text-body-2 font-weight-medium text-high-emphasis">
-                  John Doe
+                  {{ username }}
                 </div>
                 <div class="text-capitalize text-caption text-disabled">
-                  Admin
+                  {{ role }}
                 </div>
               </div>
             </div>
@@ -128,7 +100,7 @@ const userProfileList = [
                 append-icon="ri-logout-box-r-line"
                 :to="{ name: 'login' }"
               >
-                Logout
+                退出登录
               </VBtn>
             </VListItem>
           </PerfectScrollbar>

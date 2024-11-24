@@ -113,6 +113,10 @@ async function deleteItemConfirm(){
   //关闭选择框
   deleteDialog.value = false
 }
+//编辑学生
+function editItem(){
+
+}
 // 在组件挂载时请求数据
 onMounted(() => {
   classId.value = localStorage.getItem('classId')

@@ -32,8 +32,10 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
     const userId = localStorage.getItem("userId")
+    const role = localStorage.getItem("role")
     useUserStore().role = localStorage.getItem("role")
     useUserStore().userId = localStorage.getItem("userId")
+    useUserStore().username = localStorage.getItem("username")
     // 如果 instId 为空并且不是已经处于 /login 页面，则重定向到 /login
     if (userId === '' && to.path !== '/login') {
         if (to.path == '/Register'){
@@ -41,7 +43,7 @@ router.beforeEach((to, from, next) => {
         }
         next('/login');
     } else {
-        next();
+        next()
     }
 });
 

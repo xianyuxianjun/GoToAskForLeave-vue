@@ -30,6 +30,7 @@ const login =  async () => {
   }else{
     localStorage.setItem('userId',res.data.userId)
     localStorage.setItem('role',res.data.role)
+    localStorage.setItem("username",res.data.username)
     alert('登陆成功')
     await router.push("/")
   }

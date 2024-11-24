@@ -4,6 +4,7 @@ import {useUserStore} from "@/store/user.js";
 import {addleave, getCourse, getLeaveData} from "@/Api/student.js"
 import AppDateTimePicker from "@core/components/app-form-elements/AppDateTimePicker.vue";
 import { isObjectEmpty } from "@/utils/isObjectEmpty.js"
+import {delectLeave} from "@/Api/instApi.js";
 //用户公共数据
 const userStore = useUserStore()
 //表格头
@@ -38,12 +39,13 @@ async function getData(){
   leaveList.value = leaveDate.value
 }
 //获取学生的课程列表
-async function getcourseList(){
+async function getCourseList(){
   const res = await getCourse(userStore.userId)
+  courseList.value = res.data
 }
 onMounted(()=>{
   getData()
-  getcourseList()
+  getCourseList()
 })
 //请假
 function qingjia() {
@@ -60,6 +62,23 @@ async function shenqing(){
   if (res.code ===1){
     alert("申请成功")
     await getData()
+    qj.value = false
+  }
+}
+const ck = ref(false)
+const ckData = ref({})
+//查看请假条
+function chakan(item) {
+  ck.value = true
+  ckData.value = item
+}
+//删除请假条
+async function deleteItem(item){
+  console.log(item.leaveId)
+  const res = await delectLeave(item.leaveId)
+  if (res.code === 1){
+    alert("删除成功")
+    getData()
   }
 }
 </script>
@@ -77,8 +96,25 @@ async function shenqing(){
     </VCardText>
     <VDataTable :headers="heards" :items="leaveList">
     <template #item.cao="{ item }">
-      <VBtn>查看</VBtn>
+      <VBtn @click="chakan(item)">查看</VBtn>
+      <IconBtn
+        size="small"
+        @click="deleteItem(item)"
+      >
+        <VIcon icon="ri-delete-bin-line" />
+      </IconBtn>
     </template>
+      <template #item.status="{ item }">
+        <VChip v-if="item.status === '未通过'" color="error">
+          {{ item.status }}
+        </VChip>
+        <VChip v-if="item.status === '已通过'" color="success">
+          {{ item.status }}
+        </VChip>
+        <VChip v-if="item.status === '未审批'" color="secondary">
+          {{ item.status }}
+        </VChip>
+      </template>
     </VDataTable>
   </VCard>
   <VDialog v-model="qj" max-width="600">
@@ -116,6 +152,86 @@ async function shenqing(){
           @click="shenqing"
         >
           提交申请
+        </VBtn>
+      </VCardText>
+    </VCard>
+  </VDialog>
+  <VDialog v-model="ck" max-width="600">
+    <VCard title="请假条">
+      <DialogCloseBtn
+        variant="text"
+        size="default"
+        @click="ck = false"
+      />
+      <VCardText>
+        <VRow>
+          <VCol
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <VTextField
+              v-model="ckData.daynum"
+              label="请假天数"
+              placeholder="请假天数"
+              readonly
+            />
+          </VCol>
+          <VCol
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <VTextField
+              v-model="ckData.courseName"
+              label="请假课程"
+              persistent-hint
+              placeholder="Doe"
+              readonly
+            />
+          </VCol>
+          <VCol cols="12">
+            <VTextField
+              v-model="ckData.audittime"
+              label="请假时间"
+              placeholder="请假时间"
+              readonly
+            />
+          </VCol>
+          <VCol cols="12">
+
+          </VCol>
+          <VCol
+            cols="12"
+            sm="12"
+          >
+            <VTextarea
+              v-model="ckData.reason"
+              label="请假事由"
+              placeholder="请假事由"
+              readonly
+            />
+          </VCol>
+          <VCol
+            cols="12"
+            sm="12"
+          >
+            <VTextarea
+              label="批复"
+              placeholder="批复"
+              v-model="ckData.opinion"
+              readonly
+            />
+          </VCol>
+        </VRow>
+      </VCardText>
+
+      <VCardText class="d-flex justify-end flex-wrap gap-4">
+        <VBtn
+          color="error"
+          @click="ck=false"
+        >
+          关闭
         </VBtn>
       </VCardText>
     </VCard>

@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user',{
         return{
             userId:'',//用户id
             role:'',//角色
+            username:''
         }
     }
 })

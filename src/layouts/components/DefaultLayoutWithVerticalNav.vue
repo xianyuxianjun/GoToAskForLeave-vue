@@ -9,13 +9,13 @@ import {useUserStore} from "@/store/user.js";
 const userStore = useUserStore()
 const navItems = ref([])
 onMounted(()=>{
-  if (userStore.role==='学生'){
+  if (localStorage.getItem('role')==='学生'){
     navItems.value = studentItem
   }
-  if (userStore.role==='辅导员'){
+  if (localStorage.getItem('role')==='辅导员'){
     navItems.value = instItem
   }
-  if (userStore.role === '管理员'){
+  if (localStorage.getItem('role')==='管理员'){
     navItems.value = userItem
   }
 })

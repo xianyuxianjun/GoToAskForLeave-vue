@@ -11,7 +11,7 @@ export default [
     },
     {
         title: '班级管理',
-        to: { name: 'root' },
+        to: { name: 'admin-class-manage' },
         icon: { icon: 'ri-file-text-line' },
     },
 

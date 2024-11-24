@@ -30,7 +30,7 @@ const register =  async () => {
     alert("注册成功")
     await router.push("/login")
   }else {
-    console.log(res)
+    console.log(res.message)
     alert("注册失败")
   }
 }

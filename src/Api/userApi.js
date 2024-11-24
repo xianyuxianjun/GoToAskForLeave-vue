@@ -19,3 +19,8 @@ export async function updateInst(inst){
     const res = await useApi.post("/inst/updateInst",inst)
     return res.data
 }
+
+export async function getAllClasses(){
+    const res = await useApi.post("/classes/getAllClasses")
+    return res.data
+}

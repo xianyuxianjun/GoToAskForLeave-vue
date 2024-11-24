@@ -23,16 +23,23 @@ const inst = ref({})
 const search = ref('')
 //搜索
 function searchInst() {
-
+  if (search.value === ''){
+    instList.value = instData.value
+    return
+  }
+  instList.value = instData.value.filter(item => item.instName === search.value)
 }
 //添加辅导员
 async function tianjia(){
   const res = await addInst(inst.value)
+  console.log(res)
   if (res.code === 1){
     alert("添加成功")
     instDig.value = false
     getData()
     inst.value = {}
+  }else {
+    alert(res.message)
   }
 }
 const instDig = ref(false)

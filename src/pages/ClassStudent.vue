@@ -141,6 +141,8 @@ async function tianjia(){
     alert("添加成功")
     student.value = {}
     stuDig.value = false
+  }else {
+    alert(res.message)
   }
 }
 

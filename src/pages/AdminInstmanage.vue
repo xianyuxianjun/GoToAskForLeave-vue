@@ -3,6 +3,7 @@ import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 import {ref} from "vue"
 import {getDep} from "@/Api/instApi.js";
 import {addInst, delectInst, getAllInst, updateInst} from "@/Api/userApi.js";
+import {isObjectEmpty} from "@/utils/isObjectEmpty.js"
 
 //表格表头
 const headers = ref([
@@ -31,6 +32,10 @@ function searchInst() {
 }
 //添加辅导员
 async function tianjia(){
+  if (!isObjectEmpty(inst.value)){
+    alert("请填写完整信息")
+    return
+  }
   const res = await addInst(inst.value)
   console.log(res)
   if (res.code === 1){
@@ -92,6 +97,10 @@ onMounted(()=>{
 const editInst = ref({})
 const editDig = ref(false)
 async function xiugai(){
+  if (!isObjectEmpty(editInst.value)){
+    alert("请填写完整信息")
+    return
+  }
   const res = await updateInst(editInst.value)
   if (res.code===1){
     alert("修改成功")

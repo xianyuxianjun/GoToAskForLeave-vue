@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import {onMounted, ref, toRefs} from "vue";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
-import { getClassList,addCourse } from '../Api/instApi.js'
-import {useUserStore} from "@/store/user.js"
+import { addCourse } from '../Api/instApi.js'
+import { getAllClassList } from "@/Api/userApi"
 import {isObjectEmpty} from "@/utils/isObjectEmpty.js"
-const userStore = useUserStore();
+
 const isDialogVisible = ref(false)
 const emit = defineEmits(['close']);
 //课程信息
@@ -21,9 +21,7 @@ const classList = ref([
 
 //获取辅导员的班级列表
 const getData = async () => {
-  const res = await getClassList({instId:userStore.userId})
-  console.log("sadad")
-  console.log(res)
+  const res = await getAllClassList()
   classList.value = res.data
 }
 //添加
@@ -44,7 +42,7 @@ const tianjia = async () => {
     emit('close')
   }else
     alert("添加失败")
-    isDialogVisible.value = false
+  isDialogVisible.value = false
 }
 onMounted(()=>{
 

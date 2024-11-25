@@ -22,7 +22,13 @@ const leaveList = ref([])
 //学生的课程列表
 const courseList = ref([])
 //请假条
-const leave = ref({})
+const leave = ref({
+  stuId:'',
+  courseId:'',
+  reason:'',
+  daynum:'',
+  audittime:''
+})
 //请假框是否打开
 const qj = ref(false)
 //搜索框的值
@@ -53,11 +59,11 @@ function qingjia() {
 }
 //提交申请
 async function shenqing(){
-  if (!isObjectEmpty(leave.value)){
+  leave.value.stuId = userStore.userId
+  if (!isObjectEmpty(leave)){
     alert("请填写完整数据")
     return
   }
-  leave.value.stuId = userStore.userId
   const res = await addleave(leave.value)
   if (res.code ===1){
     alert("申请成功")

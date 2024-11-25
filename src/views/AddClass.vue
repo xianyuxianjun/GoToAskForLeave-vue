@@ -3,6 +3,7 @@ import { onMounted, ref, toRefs } from "vue"
 import DialogCloseBtn from "../@core/components/DialogCloseBtn.vue"
 import { addClasses, getDep } from "../Api/instApi.js"
 import {useUserStore} from "@/store/user.js"
+import {isObjectEmpty} from "@/utils/isObjectEmpty.js"
 const userStore = useUserStore();
 
 const emit = defineEmits(['close'])
@@ -37,16 +38,16 @@ const depId = ref('')
 
 //添加班级
 const tianjia = async () => {
-  console.log("添加班级")
   newClass.value.depId = depId.value
   newClass.value.instId = userStore.userId
-  if (newClass.value.className == '' && newClass.value.major == '' && newClass.value.grade == '') {
-    alert('请输入完整信息')
-  } else {
-    const res = await addClasses(newClass.value)
-    isDialogVisible.value=false
-    emit('close')
+  if (!isObjectEmpty(newClass.value)){
+    alert("请填写完整信息")
+    return
   }
+  const res = await addClasses(newClass.value)
+  isDialogVisible.value=false
+  emit('close')
+
 }
 
 //获取二级学院列表

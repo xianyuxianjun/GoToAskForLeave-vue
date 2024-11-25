@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { useApi } from "@/utils/api";
 import {ref, toRefs, watch} from "vue";
 import { updateLeave } from '../Api/instApi.js'
-import {useUserStore} from "@/store/user.js"
-const userStore = useUserStore();
 const isDialogVisible = ref(false)
 const {leave} = defineProps(['leave'])
 const data = ref({

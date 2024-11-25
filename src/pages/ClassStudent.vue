@@ -8,28 +8,12 @@ import avatar7 from '@images/avatars/avatar-7.png'
 import {getStudentList, delectStudent, addStudent} from '../Api/instApi.js'
 import { ref, onMounted } from 'vue';
 import {useUserStore} from "@/store/user.js"
-import {useRouter} from "vue-router";
-import {useClassesStore} from "@/store/classes.js";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 import {isObjectEmpty} from "@/utils/isObjectEmpty.js";
-const classStore = useClassesStore();
-const router = useRouter()
 const classId = ref('')
 const userStore = useUserStore();
 //展示的学生
 const studentList = ref([
-  {
-    stuId: '202209512245',
-    avatar: avatar8,
-    stuName: '陈咸鱼',
-    sex: '男',
-    email: 'kocrevy0@thetimes.co.uk',
-    address: '广西梧州',
-    stuTel: '13005976925',
-    contact: "陈生",
-    contactTel: '5554654',
-    className: '1'
-  }
 ]);
 //请求的数据
 const data = ref([])

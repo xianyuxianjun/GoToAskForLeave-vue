@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { getDep,updateClasses } from "@/Api/instApi.js"
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
-import {useUserStore} from "@/store/user.js"
-const userStore = useUserStore();
+import {isObjectEmpty} from "@/utils/isObjectEmpty.js"
+
 const props = defineProps(['classes'])
 const emit = defineEmits(['close'])
 const dia = ref(false)
@@ -17,6 +17,10 @@ async function getDepList(){
 }
 //修改班级
 async function xiugai(){
+  if (!isObjectEmpty(newClass.value)){
+    alert("请填写完整信息")
+    return
+  }
   const res = await updateClasses(newClass.value)
   if (res.code === 1){
     alert("修改成功")

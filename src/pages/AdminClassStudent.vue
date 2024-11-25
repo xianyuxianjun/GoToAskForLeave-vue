@@ -8,12 +8,9 @@ import avatar7 from '@images/avatars/avatar-7.png'
 import {getStudentList, delectStudent, addStudent} from '../Api/instApi.js'
 import { ref, onMounted } from 'vue';
 import {useUserStore} from "@/store/user.js"
-import {useRouter} from "vue-router";
-import {useClassesStore} from "@/store/classes.js";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 import {isObjectEmpty} from "@/utils/isObjectEmpty.js";
-const classStore = useClassesStore();
-const router = useRouter()
+
 const classId = ref('')
 const userStore = useUserStore();
 //展示的学生
@@ -89,7 +86,6 @@ const searchStudent = ()=>{
   }
   studentList.value = studentList.value.filter(item => item.stuName === search.value)
 }
-const editDialog = ref(false)
 const deleteDialog = ref(false)
 const editedItem = ref()
 const editedIndex = ref(-1)
@@ -106,6 +102,11 @@ function closeDelete() {
 async function deleteItemConfirm(){
   //执行删除的逻辑
   const res =await delectStudent(editedIndex.value)
+  if (res.code === 1){
+    alert("删除成功")
+  }else {
+    alert(res.message)
+  }
   //初始化操作数据
   await getData(classId.value)
   editedItem.value = ''

@@ -1,16 +1,9 @@
 <script  setup>
-import AddClass from "@/views/AddClass.vue";
 import { ref,onMounted} from "vue";
 import {addClasses, delectClasses, getClassData, getDep} from "@/Api/instApi.js"
-import UpdateClass from "@/views/UpdateClass.vue";
-import {useUserStore} from "@/store/user.js"
-import {useClassesStore} from "@/store/classes.js";
 import {getAllClasses, getInstItem, updateClassesAdmin} from "@/Api/userApi.js";
-import {addClass} from "@formkit/drag-and-drop";
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
-
-const userStore = useUserStore();
-const classStore = useClassesStore();
+import {isObjectEmpty} from "@/utils/isObjectEmpty.js";
 const search = ref('')
 const headers = reactive([
   {title:'班级',key:'className'},
@@ -65,9 +58,14 @@ function daddClasses(){
   banDig.value=true
 }
 async function tianjia(){
+  if (!isObjectEmpty(newClass.value)){
+    alert("请填写完整信息")
+    return
+  }
   const res = await addClasses(newClass.value)
   if (res.code === 1){
     alert("添加成功")
+    getData()
     banDig.value=false
     newClass.value={}
   }else {
@@ -82,12 +80,11 @@ const getDepList = async () => {
   depList.value = res.data
 }
 //年级
-const gradel = ref([
+const grade = ref([
   { title: '2024级', value: '2024级' },
   { title: '2023级', value: '2023级' },
   { title: '2022级', value: '2022级' },
   { title: '2021级', value: '2021级' },
-
 ])
 onMounted(()=>{
   getData()
@@ -106,6 +103,10 @@ function deleteItem(item){
   delectDig.value=true
 }
 async function xiugai(){
+  if (!isObjectEmpty(editValue.value)){
+    alert("请填写完整信息")
+    return
+  }
   const res = await updateClassesAdmin(editValue.value)
   if (res.code === 1){
     alert("修改成功")
@@ -218,7 +219,7 @@ async function xiugai(){
           >
             <VSelect
               v-model="newClass.grade"
-              :items="gradel"
+              :items="grade"
               label="年级"
             />
           </VCol>

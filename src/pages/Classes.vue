@@ -4,10 +4,8 @@ import { ref,onMounted} from "vue";
 import {delectClasses, getClassData} from "@/Api/instApi.js"
 import UpdateClass from "@/views/UpdateClass.vue";
 import {useUserStore} from "@/store/user.js"
-import {useClassesStore} from "@/store/classes.js";
 
 const userStore = useUserStore();
-const classStore = useClassesStore();
 const search = ref('')
 const headers = reactive([
   {title:'班级',key:'className'},

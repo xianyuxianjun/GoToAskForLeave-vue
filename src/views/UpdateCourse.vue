@@ -1,6 +1,7 @@
 <script setup>
 import DialogCloseBtn from "@core/components/DialogCloseBtn.vue";
 import { updateCourse } from "@/Api/instApi.js"
+import {isObjectEmpty} from "@/utils/isObjectEmpty.js"
 const props = defineProps(['course']);
 const emit = defineEmits(['close'])
 //更新后的课程信息
@@ -20,6 +21,10 @@ const isDialogVisible = ref(false)
 //修改
 const xiugai = async () => {
   newCourse.value.courseId = props.course.courseId
+  if (!isObjectEmpty(newCourse.value)){
+    alert("请填写完整信息")
+    return
+  }
   const res =  await updateCourse(newCourse.value)
   if (res.code === 1){
     alert("修改成功")

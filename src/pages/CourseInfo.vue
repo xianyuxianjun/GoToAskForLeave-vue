@@ -38,7 +38,7 @@ async function getData(){
  async function delectCourse() {
     await delectCoursee(delectIndex.value)
     await getData()
-    alert("删除成功")
+    ssale("删除成功")
    delectDig.value = false
 }
 function closeDig(){
@@ -53,9 +53,28 @@ function deleteItem(item){
   delectDig.value = true
 }
 const delectDig = ref(false)
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
+
 </script>
 
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
     <VCard title="班级信息">
       <VCardText>
         <VRow class="mb-4">
@@ -67,7 +86,10 @@ const delectDig = ref(false)
           </VCol>
         </VRow>
       </VCardText>
-      <VDataTable :headers="headers" :items="courseList">
+      <VDataTable :headers="headers" :items="courseList"  :items-per-page="options.itemsPerPage"
+                  :page="options.page"
+                  :options="options"
+                  class="text-no-wrap">
       <template #item.cao="{ item }">
         <IconBtn
           size="small"
@@ -77,6 +99,28 @@ const delectDig = ref(false)
         </IconBtn>
         <UpdateClass :course ="item" @close="closeDig"/>
       </template>
+        <template #bottom>
+          <VCardText class="pt-2">
+            <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+              <VTextField
+                v-model="options.itemsPerPage"
+                label="每页的记录数"
+                type="number"
+                min="1"
+                max="15"
+                hide-details
+                variant="underlined"
+                style="max-inline-size: 8rem;min-inline-size: 5rem;"
+              />
+
+              <VPagination
+                v-model="options.page"
+                :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+                :length="Math.ceil(courseList.length / options.itemsPerPage)"
+              />
+            </div>
+          </VCardText>
+        </template>
       </VDataTable>
       <VDialog
         v-model="delectDig"

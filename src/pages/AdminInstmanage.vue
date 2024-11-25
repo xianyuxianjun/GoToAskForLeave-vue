@@ -19,7 +19,12 @@ const instList = ref([])
 //获取到的数据
 const instData = ref([])
 //辅导员
-const inst = ref({})
+const inst = ref({
+  instName:'',
+  email:'',
+  telephone:'',
+  depId:''
+})
 //搜索框的值
 const search = ref('')
 //搜索
@@ -33,18 +38,22 @@ function searchInst() {
 //添加辅导员
 async function tianjia(){
   if (!isObjectEmpty(inst.value)){
-    alert("请填写完整信息")
+    ssale("请填写完整信息")
     return
   }
   const res = await addInst(inst.value)
-  console.log(res)
   if (res.code === 1){
-    alert("添加成功")
+    ssale("添加成功")
     instDig.value = false
-    getData()
-    inst.value = {}
+    await getData()
+    inst.value = {
+      instName:'',
+      email:'',
+      telephone:'',
+      depId:''
+    }
   }else {
-    alert(res.message)
+    ddale(res.message)
   }
 }
 const instDig = ref(false)
@@ -66,11 +75,12 @@ function closeDelete(){
 async function deleteItemConfirm(){
   const res = await delectInst(editInst.value.instId)
   if (res.code===1){
-    alert("删除成功")
+    ssale("删除成功")
     await getData()
     deleteDialog.value = false
   }else {
-    alert("删除失败")
+    ddale("删除失败")
+    deleteDialog.value = false
   }
 }
 const depList = ref([])
@@ -97,19 +107,29 @@ onMounted(()=>{
 const editInst = ref({})
 const editDig = ref(false)
 async function xiugai(){
-  if (!isObjectEmpty(editInst.value)){
-    alert("请填写完整信息")
-    return
-  }
   const res = await updateInst(editInst.value)
   if (res.code===1){
-    alert("修改成功")
-    getData();
+    ssale("修改成功")
+    await getData();
     editDig.value=false
   }else{
-    alert("修改失败")
+    ddale("修改失败")
+    editDig.value=false
   }
 }
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
+
 </script>
 
 >
@@ -126,7 +146,10 @@ async function xiugai(){
   </VRow>
 </VCardText>
 <VCardText>
-  <VDataTable :headers="headers" :items="instList">
+  <VDataTable :headers="headers" :items="instList"  :items-per-page="options.itemsPerPage"
+              :page="options.page"
+              :options="options"
+              class="text-no-wrap">
     <template #item.instName="{ item }">
       <div class="d-flex align-center">
         <!-- avatar -->
@@ -168,6 +191,28 @@ async function xiugai(){
           <VIcon icon="ri-delete-bin-line" />
         </IconBtn>
       </div>
+    </template>
+    <template #bottom>
+      <VCardText class="pt-2">
+        <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+          <VTextField
+            v-model="options.itemsPerPage"
+            label="每页的记录数"
+            type="number"
+            min="1"
+            max="15"
+            hide-details
+            variant="underlined"
+            style="max-inline-size: 8rem;min-inline-size: 5rem;"
+          />
+
+          <VPagination
+            v-model="options.page"
+            :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+            :length="Math.ceil(instList.length / options.itemsPerPage)"
+          />
+        </div>
+      </VCardText>
     </template>
   </VDataTable>
 </VCardText>
@@ -285,7 +330,12 @@ async function xiugai(){
       </VCardText>
     </VCard>
   </VDialog>
-
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
 </template>
 
 <style scoped lang="scss">

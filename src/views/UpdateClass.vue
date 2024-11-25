@@ -18,12 +18,12 @@ async function getDepList(){
 //修改班级
 async function xiugai(){
   if (!isObjectEmpty(newClass.value)){
-    alert("请填写完整信息")
+    ssale("请填写完整信息")
     return
   }
   const res = await updateClasses(newClass.value)
   if (res.code === 1){
-    alert("修改成功")
+    ssale("修改成功")
     emit('close')
     dia.value = false
   }else{
@@ -34,9 +34,26 @@ async function xiugai(){
 onMounted(()=>{
   getDepList()
 })
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
 </script>
 
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
 <VDialog v-model="dia" max-width="600">
   <template #activator="{ props }">
       <IconBtn

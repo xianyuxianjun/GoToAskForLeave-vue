@@ -21,12 +21,14 @@ function searchDep() {
 const deleteDialog = ref(false)
 const depDig = ref(false)
 const editDig = ref(false)
-const dep = ref({})
+const dep = ref({
+  depId:'',
+  depName:''
+})
 const editDep = ref({})
 function editItem(item){
   editDep.value = item
   editDep.value.oldId = editDep.value.depId
-  console.log(editDep.value)
   editDig.value = true
 }
 const delectIndex = ref('')
@@ -37,43 +39,42 @@ function deleteItem(item){
 async function deleteItemConfirm(){
   const res = await delectDep(delectIndex.value)
   if (res.code === 1){
-    alert("删除成功")
+    ssale("删除成功")
     getData()
     deleteDialog.value = false
     delectIndex.value = ''
     return
   }
-  alert(res.message)
+  ddale(res.message)
 }
 async function tianjia(){
   if (!isObjectEmpty(dep.value)){
-    alert("请填写完整信息")
+    ssale("请填写完整信息")
     return
   }
   const res = await addDep(dep.value)
   if (res.code===1){
-    alert('添加成功')
-    getData()
-    dep.value = {}
+    ssale("添加成功")
+    await getData()
+    dep.value = {
+      depId:'',
+      depName:''
+    }
     depDig.value = false
     return
   }
-  alert(res.message)
+  ddale(res.message)
 }
 async function xiugai(){
-  if (!isObjectEmpty(editDep.value)){
-    alert("请填写完整信息")
-    return
-  }
   const res = await updateDep(editDep.value)
   if (res.code===1){
-    alert("修改成功")
-    getData()
+    ssale("修改成功")
+    await getData()
     editDep.value = {}
     editDig.value = false
     return
   }
-  alert(res.message)
+  ddale(res.message)
 }
 async function getData() {
   const res = await getAllDep()
@@ -83,6 +84,19 @@ async function getData() {
 onMounted(()=>{
   getData()
 })
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
+
 </script>
 
 <template>
@@ -98,7 +112,10 @@ onMounted(()=>{
       </VRow>
     </VCardText>
     <VCardText>
-      <VDataTable :headers="headers" :items="depList">
+      <VDataTable :headers="headers" :items="depList"  :items-per-page="options.itemsPerPage"
+                  :page="options.page"
+                  :options="options"
+                  class="text-no-wrap">
         <template #item.actions="{ item }">
           <div class="d-flex gap-1">
             <IconBtn
@@ -114,6 +131,28 @@ onMounted(()=>{
               <VIcon icon="ri-delete-bin-line" />
             </IconBtn>
           </div>
+        </template>
+        <template #bottom>
+          <VCardText class="pt-2">
+            <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+              <VTextField
+                v-model="options.itemsPerPage"
+                label="每页的记录数"
+                type="number"
+                min="1"
+                max="15"
+                hide-details
+                variant="underlined"
+                style="max-inline-size: 8rem;min-inline-size: 5rem;"
+              />
+
+              <VPagination
+                v-model="options.page"
+                :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+                :length="Math.ceil(depList.length / options.itemsPerPage)"
+              />
+            </div>
+          </VCardText>
         </template>
       </VDataTable>
     </VCardText>
@@ -216,7 +255,12 @@ onMounted(()=>{
       </VCardText>
     </VCard>
   </VDialog>
-
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
 </template>
 
 

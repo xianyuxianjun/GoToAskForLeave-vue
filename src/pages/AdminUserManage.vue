@@ -42,50 +42,69 @@ function deleteItem(item){
 //删除
 async function deleteItemConfirm(){
   const res = await delectUser(delectIndex.value)
-  console.log(res)
   if (res.code === 1){
-    alert("删除成功")
-    getData()
+    ssale("删除成功")
+    await getData()
     deleteDialog.value = false
   }else {
-    console.log(res)
-    alert(res.message)
+    ddale(res.message)
   }
 }
-const user = ref({})
+const user = ref({
+  fullname:'',
+  email:'',
+  telephone:''
+})
 //添加
 async function tianjia(){
   if (!isObjectEmpty(user.value)){
-    alert("请填写完整信息")
+    ssale("请填写完整信息")
     return
   }
   const res = await addUser(user.value)
   if (res.code === 1){
-    alert("添加成功")
-    getData()
+    ssale("添加成功")
+    await getData()
     userDig.value = false
+    user.value = {
+      fullname:'',
+      email:'',
+      telephone:''
+    }
   }
 }
 //修改
 async function xiugai(){
   const res = await updateUser(editInst.value)
   if (res.code === 1){
-    alert("修改成功")
-    getData()
+    ssale("修改成功")
+    await getData()
     editDig.value = false
     return
   }
-  alert(res.message)
+  ddale(res.message)
 }
 async function getData(){
     const res = await getAllUser()
-  console.log(res)
     userData.value = res.data
     userList.value = userData.value
 }
 onMounted(()=>{
   getData()
 })
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
+
 </script>
 
 <template>
@@ -101,7 +120,10 @@ onMounted(()=>{
       </VRow>
     </VCardText>
     <VCardText>
-      <VDataTable :headers="headers" :items="userList">
+      <VDataTable :headers="headers" :items="userList"  :items-per-page="options.itemsPerPage"
+                  :page="options.page"
+                  :options="options"
+                  class="text-no-wrap">
         <template #item.actions="{ item }">
           <div class="d-flex gap-1">
             <IconBtn
@@ -117,6 +139,28 @@ onMounted(()=>{
               <VIcon icon="ri-delete-bin-line" />
             </IconBtn>
           </div>
+        </template>
+        <template #bottom>
+          <VCardText class="pt-2">
+            <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+              <VTextField
+                v-model="options.itemsPerPage"
+                label="每页的记录数"
+                type="number"
+                min="1"
+                max="15"
+                hide-details
+                variant="underlined"
+                style="max-inline-size: 8rem;min-inline-size: 5rem;"
+              />
+
+              <VPagination
+                v-model="options.page"
+                :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+                :length="Math.ceil(userList.length / options.itemsPerPage)"
+              />
+            </div>
+          </VCardText>
         </template>
       </VDataTable>
     </VCardText>
@@ -228,7 +272,12 @@ onMounted(()=>{
       </VCardText>
     </VCard>
   </VDialog>
-
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
 </template>
 
 

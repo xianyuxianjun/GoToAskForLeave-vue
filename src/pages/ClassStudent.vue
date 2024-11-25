@@ -111,28 +111,65 @@ const stuDig = ref(false)
 function addStudentDig(){
   stuDig.value = true
 }
-const student = ref({})
+const student = ref({
+  classId:'',
+  stuName:'',
+  sex:'',
+  email:'',
+  stuTel:'',
+  contact:'',
+  contactTel:'',
+  address:'',
+  role:''})
 async function tianjia(){
+
+  student.value.classId=classId.value
+  student.value.role = "学生"
   if (!isObjectEmpty(student.value)){
-    alert("请输入完整信息")
+    ssale("请填写完整数据")
     return
   }
-  student.value.classId=classId.value
-  student.value.instId = userStore.userId
-  student.value.role = "学生"
   const res = await addStudent(student.value)
   if (res.code === 1){
-    alert("添加成功")
-    student.value = {}
+    ssale("添加成功")
+    await getData(classId.value)
+    student.value = {
+      classId:'',
+      stuName:'',
+      sex:'',
+      email:'',
+      stuTel:'',
+      contact:'',
+      contactTel:'',
+      address:'',
+      role:''}
     stuDig.value = false
   }else {
-    alert(res.message)
+    ddale(res.message)
   }
 }
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
 
 </script>
 
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
   <VCard>
     <VCardText>
       <VRow class="mb-4">
@@ -145,7 +182,10 @@ async function tianjia(){
       </VRow>
     </VCardText>
     <VCardText>
-      <VDataTable :headers="headers" :items="studentList">
+      <VDataTable :headers="headers" :items="studentList"  :items-per-page="options.itemsPerPage"
+                  :page="options.page"
+                  :options="options"
+                  class="text-no-wrap">
         <template #item.stuName="{ item }">
           <div class="d-flex align-center">
             <!-- avatar -->
@@ -181,6 +221,28 @@ async function tianjia(){
               <VIcon icon="ri-delete-bin-line" />
             </IconBtn>
           </div>
+        </template>
+        <template #bottom>
+          <VCardText class="pt-2">
+            <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+              <VTextField
+                v-model="options.itemsPerPage"
+                label="每页的记录数"
+                type="number"
+                min="1"
+                max="15"
+                hide-details
+                variant="underlined"
+                style="max-inline-size: 8rem;min-inline-size: 5rem;"
+              />
+
+              <VPagination
+                v-model="options.page"
+                :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+                :length="Math.ceil(studentList.length / options.itemsPerPage)"
+              />
+            </div>
+          </VCardText>
         </template>
       </VDataTable>
     </VCardText>

@@ -27,12 +27,12 @@ const getData = async () => {
 //添加
 const tianjia = async () => {
   if (!isObjectEmpty(course.value)){
-    alert("请填写完整信息")
+    ssale("请填写完整信息")
     return
   }
   const res = await addCourse(course.value)
   if(res.code == 1){
-    alert('添加成功')
+    ssale("添加成功")
     course.value.courseName=''
     course.value.year=''
     course.value.term=''
@@ -41,16 +41,33 @@ const tianjia = async () => {
     isDialogVisible.value=false
     emit('close')
   }else
-    alert("添加失败")
+   ddale("添加失败")
   isDialogVisible.value = false
 }
 onMounted(()=>{
 
   getData()
 })
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
 </script>
 
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
   <VDialog
     v-model="isDialogVisible"
     max-width="600"

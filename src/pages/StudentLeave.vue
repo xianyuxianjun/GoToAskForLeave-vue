@@ -61,13 +61,20 @@ function qingjia() {
 async function shenqing(){
   leave.value.stuId = userStore.userId
   if (!isObjectEmpty(leave)){
-    alert("请填写完整数据")
+    ssale("请输入完整数据")
     return
   }
   const res = await addleave(leave.value)
   if (res.code ===1){
-    alert("申请成功")
+    ssale("申请成功")
     await getData()
+    leave.value = {
+      stuId:'',
+      courseId:'',
+      reason:'',
+      daynum:'',
+      audittime:''
+    }
     qj.value = false
   }
 }
@@ -83,12 +90,31 @@ async function deleteItem(item){
   console.log(item.leaveId)
   const res = await delectLeave(item.leaveId)
   if (res.code === 1){
-    alert("删除成功")
-    getData()
+    ssale("删除成功")
+    await getData()
   }
 }
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
+
 </script>
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
   <VCard title="请假条">
     <VCardText>
       <VRow class="mb-4">
@@ -100,7 +126,10 @@ async function deleteItem(item){
         </VCol>
       </VRow>
     </VCardText>
-    <VDataTable :headers="heards" :items="leaveList">
+    <VDataTable :headers="heards" :items="leaveList"  :items-per-page="options.itemsPerPage"
+                :page="options.page"
+                :options="options"
+                class="text-no-wrap">
     <template #item.cao="{ item }">
       <VBtn @click="chakan(item)">查看</VBtn>
       <IconBtn
@@ -120,6 +149,28 @@ async function deleteItem(item){
         <VChip v-if="item.status === '未审批'" color="secondary">
           {{ item.status }}
         </VChip>
+      </template>
+      <template #bottom>
+        <VCardText class="pt-2">
+          <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+            <VTextField
+              v-model="options.itemsPerPage"
+              label="每页的记录数"
+              type="number"
+              min="1"
+              max="15"
+              hide-details
+              variant="underlined"
+              style="max-inline-size: 8rem;min-inline-size: 5rem;"
+            />
+
+            <VPagination
+              v-model="options.page"
+              :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+              :length="Math.ceil(leaveList.length / options.itemsPerPage)"
+            />
+          </div>
+        </VCardText>
       </template>
     </VDataTable>
   </VCard>

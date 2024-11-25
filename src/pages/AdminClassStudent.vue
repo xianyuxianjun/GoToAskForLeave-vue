@@ -99,13 +99,16 @@ function closeDelete() {
   editedIndex.value = -1
   deleteDialog.value = false
 }
+const message = ref('')
 async function deleteItemConfirm(){
   //执行删除的逻辑
   const res =await delectStudent(editedIndex.value)
   if (res.code === 1){
-    alert("删除成功")
+    message.value = '删除成功'
+    sale.value = true
   }else {
-    alert(res.message)
+    message.value = res.message
+    dale.value = true
   }
   //初始化操作数据
   await getData(classId.value)
@@ -128,24 +131,39 @@ const stuDig = ref(false)
 function addStudentDig(){
   stuDig.value = true
 }
-const student = ref({})
+const student = ref({
+  stuName:'',
+  sex:'',
+  email:'',
+  stuTel:'',
+  contact:'',
+  contactTel:'',
+  addressL:'',
+  role:'',
+  classId:''
+})
 async function tianjia(){
+  student.value.classId=classId.value
+  student.value.role = "学生"
   if (!isObjectEmpty(student.value)){
-    alert("请输入完整信息")
+    message.value = "请输如完整信息"
+    sale.value = true
     return
   }
-  student.value.classId=classId.value
-  student.value.instId = userStore.userId
-  student.value.role = "学生"
   const res = await addStudent(student.value)
   if (res.code === 1){
-    alert("添加成功")
+    message.value = '添加成功'
+    sale.value = true
     student.value = {}
     stuDig.value = false
   }else {
-    alert(res.message)
+    message.value = res.message
+    dale.value  = true
   }
 }
+const sale = ref(false)
+const dale = ref(false)
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
 
 </script>
 
@@ -162,7 +180,11 @@ async function tianjia(){
       </VRow>
     </VCardText>
     <VCardText>
-      <VDataTable :headers="headers" :items="studentList">
+      <VDataTable :headers="headers" :items="studentList"
+                  :items-per-page="options.itemsPerPage"
+                  :page="options.page"
+                  :options="options"
+                  class="text-no-wrap">
         <template #item.stuName="{ item }">
           <div class="d-flex align-center">
             <!-- avatar -->
@@ -204,6 +226,28 @@ async function tianjia(){
               <VIcon icon="ri-delete-bin-line" />
             </IconBtn>
           </div>
+          <template #bottom>
+            <VCardText class="pt-2">
+              <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+                <VTextField
+                  v-model="options.itemsPerPage"
+                  label="每页的记录数"
+                  type="number"
+                  min="1"
+                  max="15"
+                  hide-details
+                  variant="underlined"
+                  style="max-inline-size: 8rem;min-inline-size: 5rem;"
+                />
+
+                <VPagination
+                  v-model="options.page"
+                  :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+                  :length="Math.ceil(studentList.length / options.itemsPerPage)"
+                />
+              </div>
+            </VCardText>
+          </template>
         </template>
       </VDataTable>
     </VCardText>
@@ -288,6 +332,12 @@ async function tianjia(){
       </VCardText>
     </VCard>
   </VDialog>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
 </template>
 
 <style scoped lang="scss">

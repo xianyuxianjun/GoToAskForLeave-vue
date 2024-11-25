@@ -27,8 +27,8 @@ async function getData(){
 async function detectClass(){
   const res = await delectClasses(delectIndex.value)
   if (res.code === 1){
-    alert("删除成功")
-    getData()
+    ssale('删除成功')
+    await getData()
     deleteDialog.value=false
   }else{
     alert(res.message)
@@ -37,9 +37,9 @@ async function detectClass(){
 function toStudentList(item){
   localStorage.setItem('classId',item.classId)
 }
-function searchClasses(){
+async function searchClasses(){
   if (search.value === ''){
-    getData()
+    await getData()
     return
   }
   classList.value = classData.value.filter(item => item.className===search.value)
@@ -53,8 +53,27 @@ function deleteItem(item){
 onMounted(()=>{
   getData()
 })
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
+
 </script>
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
   <VCard >
     <VCardText>
       <VRow class="mb-4">
@@ -69,6 +88,10 @@ onMounted(()=>{
     <VDataTable
       :headers="headers"
       :items="classList"
+      :items-per-page="options.itemsPerPage"
+      :page="options.page"
+      :options="options"
+      class="text-no-wrap"
     >
       <template #item.className="{ item }">
         <RouterLink to="/ClassStudent" @click="toStudentList(item)">{{ item.className }}</RouterLink>
@@ -81,6 +104,28 @@ onMounted(()=>{
             <VIcon icon="ri-delete-bin-line" />
           </IconBtn>
         <UpdateClass :classes="item"/>
+      </template>
+      <template #bottom>
+        <VCardText class="pt-2">
+          <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+            <VTextField
+              v-model="options.itemsPerPage"
+              label="每页的记录数"
+              type="number"
+              min="1"
+              max="15"
+              hide-details
+              variant="underlined"
+              style="max-inline-size: 8rem;min-inline-size: 5rem;"
+            />
+
+            <VPagination
+              v-model="options.page"
+              :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+              :length="Math.ceil(classList.length / options.itemsPerPage)"
+            />
+          </div>
+        </VCardText>
       </template>
     </VDataTable>
     <VDialog

@@ -23,7 +23,6 @@ const jujue = async ()=>{
 }
 //同意
 const tongyi =async ()=>{
-  alert("同i")
   data.value.status = '已通过'
   const res = await updateLeave(data.value)
   isDialogVisible.value = false

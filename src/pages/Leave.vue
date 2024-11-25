@@ -29,12 +29,12 @@ async function select(){
 async function deleteItem(){
   const res = await delectLeave(delectIndex.value)
   if (res.code === 1){
-    alert("删除成功")
+    ssale("删除成功")
      await getData()
     delectDig.value =false
     return
   }
-  alert("删除失败："+res.message)
+  ddale(res.message)
 }
 onMounted(() => {
   getData()
@@ -46,9 +46,26 @@ function delect(item){
   delectIndex.value = item.leaveId
   delectDig.value=false
 }
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
 </script>
 
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
   <VCard title="请假审批">
     <VCardText>
       <VRow class="mb-4">

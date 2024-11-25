@@ -22,22 +22,39 @@ const isDialogVisible = ref(false)
 const xiugai = async () => {
   newCourse.value.courseId = props.course.courseId
   if (!isObjectEmpty(newCourse.value)){
-    alert("请填写完整信息")
+    ssale("修改成功")
     return
   }
   const res =  await updateCourse(newCourse.value)
   if (res.code === 1){
-    alert("修改成功")
+    ssale("修改成功")
     isDialogVisible.value = false
     emit('close')
   }else {
-    alert(res.message)
+    ddale(res.message)
     isDialogVisible.value = false
   }
+}
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
 }
 </script>
 
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
   <VDialog v-model="isDialogVisible" max-width="600">
     <template #activator="{ props }">
       <IconBtn

@@ -18,17 +18,17 @@ const loginForm = ref({
 
 const login =  async () => {
     if (!isObjectEmpty(loginForm)){
-    alert("请输入完整信息")
+    ssale("请输入完整信息")
     return
   }
   const res = await loginApi(loginForm.value)
   if (res.data === null){
-    alert("登录失败")
+    ddale(res.message)
   }else{
     localStorage.setItem('userId',res.data.userId)
     localStorage.setItem('role',res.data.role)
     localStorage.setItem("username",res.data.username)
-    alert('登陆成功')
+    ssale('登录成功')
     await router.push("/")
   }
 }
@@ -44,9 +44,26 @@ function ToSegister(){
 }
 const authV1ThemeLoginMask = useGenerateImageVariant(authV1LoginMaskLight, authV1LoginMaskDark)
 const isPasswordVisible = ref(false)
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+function ssale(mes){
+  message.value = mes
+  sale.value = true
+}
+function ddale(mes){
+  message.value = mes
+  dale.value = true
+}
 </script>
 
 <template>
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
   <div class="auth-wrapper d-flex align-center justify-center pa-4">
     <VCard
       class="auth-card pa-1 pa-sm-7"

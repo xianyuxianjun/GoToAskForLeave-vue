@@ -19,20 +19,20 @@ const classData = ref([{
 }])
 async function getData(){
   const res = await getAllClasses()
-  console.log(res)
   classData.value = res.data
   classList.value = classData.value
 }
-
 async function detectClass(){
   console.log(editValue.value.classId)
   const res = await delectClasses(editValue.value.classId)
+  message.value = '删除成功'
   if (res.code === 1){
-    alert("删除成功")
+    sale.value = true
     getData()
     delectDig.value = false
   }else{
-    alert(res.message)
+    message.value = res.message
+    dale.value= true
   }
 }
 function toStudentList(item){
@@ -52,24 +52,39 @@ async function getInstKV(){
   instItem.value = res.data
 }
 const banDig = ref(false)
-const newClass = ref({})
+const newClass = ref({
+  className:'',
+  depId:'',
+  instId:'',
+  grade:'',
+  major:'',
+})
 //添加班级
 function daddClasses(){
   banDig.value=true
 }
 async function tianjia(){
   if (!isObjectEmpty(newClass.value)){
-    alert("请填写完整信息")
+    message.value = '请填写完整信息'
+    sale.value = true
     return
   }
   const res = await addClasses(newClass.value)
+  message.value = "添加成功"
   if (res.code === 1){
-    alert("添加成功")
+    sale.value = true
     getData()
     banDig.value=false
-    newClass.value={}
+    newClass.value={
+      className:'',
+      depId:'',
+      instId:'',
+      grade:'',
+      major:'',
+    }
   }else {
-    console.log(res.message)
+    message.value = res.message
+    dale.value = true
   }
 }
 //二级学院数据
@@ -104,17 +119,24 @@ function deleteItem(item){
 }
 async function xiugai(){
   if (!isObjectEmpty(editValue.value)){
-    alert("请填写完整信息")
+    message.value = '请填写完整信息'
+    sale.value = true
     return
   }
   const res = await updateClassesAdmin(editValue.value)
+  message.value = res.message
   if (res.code === 1){
-    alert("修改成功")
+    ale.value = true
     updateClassDig.value=false
   }else {
-    alert(res.message)
+    ale.value=true
   }
 }
+const page = ref(1)
+const sale = ref(false)
+const dale = ref(false)
+const message = ref('')
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
 </script>
 <template>
   <VCard >
@@ -131,6 +153,10 @@ async function xiugai(){
     <VDataTable
       :headers="headers"
       :items="classList"
+      :items-per-page="options.itemsPerPage"
+      :page="options.page"
+      :options="options"
+      class="text-no-wrap"
     >
       <template #item.className="{ item }">
         <RouterLink to="/ClassStudent" @click="toStudentList(item)">{{ item.className }}</RouterLink>
@@ -150,8 +176,28 @@ async function xiugai(){
             <VIcon icon="ri-delete-bin-line" />
           </IconBtn>
         </div>
-<!--        <VBtn color="error" @click="detectClass(item.classId)">删除</VBtn>-->
-<!--        <UpdateClass :classes="item"/>-->
+      </template>
+      <template #bottom>
+        <VCardText class="pt-2">
+          <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
+            <VTextField
+              v-model="options.itemsPerPage"
+              label="每页的记录数"
+              type="number"
+              min="1"
+              max="15"
+              hide-details
+              variant="underlined"
+              style="max-inline-size: 8rem;min-inline-size: 5rem;"
+            />
+
+            <VPagination
+              v-model="options.page"
+              :total-visible="$vuetify.display.smAndDown ? 2 : 3"
+              :length="Math.ceil(classList.length / options.itemsPerPage)"
+            />
+          </div>
+        </VCardText>
       </template>
     </VDataTable>
   </VCard>
@@ -332,5 +378,10 @@ async function xiugai(){
       </VCardText>
     </VCard>
   </VDialog>
-
+  <VSnackbar v-model="sale"  location="top" color="success">
+    {{ message }}
+  </VSnackbar>
+  <VSnackbar v-model="dale"  location="top" color="error">
+    {{ message }}
+  </VSnackbar>
 </template>

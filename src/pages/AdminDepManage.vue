@@ -115,6 +115,7 @@ const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false]
       <VDataTable :headers="headers" :items="depList"  :items-per-page="options.itemsPerPage"
                   :page="options.page"
                   :options="options"
+                  height="70vh"
                   class="text-no-wrap">
         <template #item.actions="{ item }">
           <div class="d-flex gap-1">
@@ -134,18 +135,7 @@ const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false]
         </template>
         <template #bottom>
           <VCardText class="pt-2">
-            <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
-              <VTextField
-                v-model="options.itemsPerPage"
-                label="每页的记录数"
-                type="number"
-                min="1"
-                max="15"
-                hide-details
-                variant="underlined"
-                style="max-inline-size: 8rem;min-inline-size: 5rem;"
-              />
-
+            <div class="d-flex flex-wrap justify-center  gap-y-2 mt-2">
               <VPagination
                 v-model="options.page"
                 :total-visible="$vuetify.display.smAndDown ? 2 : 3"

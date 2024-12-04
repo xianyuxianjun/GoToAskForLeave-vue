@@ -3,7 +3,7 @@ import { useUserStore } from "@/store/user.js"
 import * as XLSX from 'xlsx';
 const userStore = useUserStore();
 import LeaveDialog from "@/views/LeaveDialog.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {delectLeave, getLeaveList,getClassList} from "@/Api/instApi"
 const leaveList = ref([
 ])
@@ -16,6 +16,7 @@ const getData = async ()=>{
 const getClass = async ()=>{
   const res = await getClassList({instId:userStore.userId})
   classList.value = res.data
+  classList.value.push({title:'全部',value:'1'})
 }
 const search = ref('')
 function searchStudent(){
@@ -23,10 +24,13 @@ function searchStudent(){
   search.value = ''
 }
 const classes = ref('')
-const classList = ref([])
-async function select(){
-  leaveList.value = leaveData.value.filter(item => item.className = classes.value)
-}
+const classList = ref([{title:'全部',value:'1'}])
+watch(classes,(newVal) =>{
+  if (newVal === '1'){
+    leaveList.value = leaveData.value
+  }
+  leaveList.value = leaveData.value.filter(item => item.classId === newVal)
+})
 async function deleteItem(){
   const res = await delectLeave(delectIndex.value)
   if (res.code === 1){
@@ -44,8 +48,14 @@ onMounted(() => {
 const delectIndex = ref('')
 const delectDig = ref(false)
 function delect(item){
+  if(item.status === '未审批'){
+    message.value = '未审批的请假条无法删除'
+    ddale(message.value)
+    return
+  }
+  console.log(item)
   delectIndex.value = item.leaveId
-  delectDig.value=false
+  delectDig.value=true
 }
 const sale = ref(false)
 const dale = ref(false)
@@ -103,14 +113,14 @@ const exportToExcel = () => {
   <VSnackbar v-model="dale"  location="top" color="error">
     {{ message }}
   </VSnackbar>
-  <VCard title="请假审批">
+  <VCard>
     <VCardText>
       <VRow class="mb-4">
         <VCol cols="12" md="2">
           <VTextField v-model="search" label="搜索" placeholder="搜索" prepend-inner-icon="ri-search-line" @keyup.enter="searchStudent"/>
         </VCol>
         <VCol cols="12" md="2">
-          <VSelect label="班级" :items="classList" v-model="classes" @change="select"/>
+          <VSelect label="班级" :items="classList" v-model="classes"/>
         </VCol>
         <VCol cols="12" md="2">
           <VBtn @click="exportToExcel">导出请假名单</VBtn>
@@ -223,7 +233,6 @@ const exportToExcel = () => {
           >
             删除
           </VBtn>
-
           <VSpacer />
         </VCardActions>
       </VCard>
